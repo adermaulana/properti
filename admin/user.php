@@ -231,8 +231,8 @@ if(isset($_GET['hal']) == "hapus"){
                                 <td><?= $data['email_admin_222146'] ?></td>
                                 <td><?= $data['created_at_admin_222146'] ?></td>
                                 <td>
-                                <a class="badge badge-warning text-decoration-none" href="edituser.php?hal=edit&id=<?= $data['id_admin_222146']?>">Edit</a>
-                                <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="user.php?hal=hapus&id=<?= $data['id_admin_222146']?>">Hapus</a>
+                                <a class="badge badge-warning text-decoration-none" href="">Edit</a>
+                                <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
                                 </td>
                             </tr>
                             <?php

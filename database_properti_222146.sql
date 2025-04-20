@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2025 at 07:34 AM
+-- Generation Time: Apr 20, 2025 at 05:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admin_222146` (
   `id_admin_222146` int(11) NOT NULL,
+  `nama_222146` varchar(255) NOT NULL,
   `username_admin_222146` varchar(50) NOT NULL,
   `password_admin_222146` varchar(255) NOT NULL,
   `email_admin_222146` varchar(100) NOT NULL,
@@ -39,8 +40,8 @@ CREATE TABLE `admin_222146` (
 -- Dumping data for table `admin_222146`
 --
 
-INSERT INTO `admin_222146` (`id_admin_222146`, `username_admin_222146`, `password_admin_222146`, `email_admin_222146`, `created_at_admin_222146`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@gmail.com', '2025-04-13 04:55:46');
+INSERT INTO `admin_222146` (`id_admin_222146`, `nama_222146`, `username_admin_222146`, `password_admin_222146`, `email_admin_222146`, `created_at_admin_222146`) VALUES
+(4, 'admin', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@gmail.com', '2025-04-20 15:13:09');
 
 -- --------------------------------------------------------
 
@@ -208,7 +209,7 @@ ALTER TABLE `transaksi_222146`
 -- AUTO_INCREMENT for table `admin_222146`
 --
 ALTER TABLE `admin_222146`
-  MODIFY `id_admin_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_admin_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `agen_222146`

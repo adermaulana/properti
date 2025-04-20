@@ -172,6 +172,18 @@ if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
                 </ul>
               </div>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#admin" aria-expanded="false" aria-controls="admin">
+                <span class="menu-title">Admin</span>
+                <i class="icon-globe menu-icon"></i>
+              </a>
+              <div class="collapse" id="admin">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="user.php">Lihat Admin</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="tambahuser.php">Tambah Admin</a></li>
+                </ul>
+              </div>
+            </li>
           </ul>
         </nav>
         <!-- partial -->

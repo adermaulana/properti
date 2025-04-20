@@ -6,21 +6,45 @@ session_start();
 
 if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
 
-  header("location:../pelanggan");
+  header("location:../agen");
 
 }
 
-if(isset($_GET['hal']) == "hapus"){
 
-    $hapus = mysqli_query($koneksi, "DELETE FROM pelanggan WHERE id = '$_GET[id]'");
-  
-    if($hapus){
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin'])) {
+    $nama = $_POST['nama_222146'];
+    $username = $_POST['username_admin_222146'];
+    $password = md5($_POST['password_admin_222146']); // Using MD5 for password hashing
+    $email = $_POST['email_admin_222146'];
+    
+    $check_username = mysqli_query($koneksi, "SELECT * FROM admin_222146 WHERE username_admin_222146 = '$username'");
+    if(mysqli_num_rows($check_username) > 0) {
         echo "<script>
-        alert('Hapus data sukses!');
-        document.location='pelanggan.php';
-        </script>";
+                alert('Username sudah digunakan!');
+                document.location='tambahuser.php';
+              </script>";
+    } else {
+        // Query untuk menyimpan data ke database
+        $simpan = mysqli_query($koneksi, "INSERT INTO admin_222146 (nama_222146, username_admin_222146, password_admin_222146, email_admin_222146) 
+                  VALUES ('$nama', '$username', '$password', '$email')");
+        
+        // Cek apakah penyimpanan berhasil
+        if ($simpan) {
+            echo "<script>
+                    alert('Simpan data sukses!');
+                    document.location='user.php';
+                </script>";
+        } else {
+            echo "<script>
+                    alert('Simpan data Gagal!');
+                    document.location='tambahuser.php';
+                </script>";
+        }
     }
-  }
+}
+
+
 
 ?>
 
@@ -50,8 +74,6 @@ if(isset($_GET['hal']) == "hapus"){
     <!-- End layout styles -->
     <link rel="shortcut icon" href="assets/images/favicon.png" />
 
-    <!-- datatable -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
   </head>
   <body>
     <div class="container-scroller">
@@ -197,109 +219,47 @@ if(isset($_GET['hal']) == "hapus"){
         </nav>
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title"> Data Pengguna </h3>
-            </div>
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <a class="btn btn-success mb-3" href="tambahpengguna.php">Tambah Data</a>
-                    <div class="table-responsive">
-                      <table class="table display" id="example" style="width:100%">
-                          <thead>
-                              <tr>
-                                  <th>No</th>
-                                  <th>Nama</th>
-                                  <th>Alamat</th>
-                                  <th>No HP</th>
-                                  <th>Status</th>
-                                  <th>Aksi</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <!-- Customer 1 -->
-                              <tr>
-                                  <td>1</td>
-                                  <td>Budi Santoso</td>
-                                  <td>Jl. Perintis No. 12, Makassar</td>
-                                  <td>081234567890</td>
-                                  <td><span class="badge badge-success">Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 2 -->
-                              <tr>
-                                  <td>2</td>
-                                  <td>Ani Lestari</td>
-                                  <td>Jl. Perintis No. 45, Makassar</td>
-                                  <td>082345678901</td>
-                                  <td><span class="badge badge-success">Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 3 -->
-                              <tr>
-                                  <td>3</td>
-                                  <td>Citra Dewi</td>
-                                  <td>Jl. Perintis No. 8, Makassar</td>
-                                  <td>083456789012</td>
-                                  <td><span class="badge badge-secondary">Non-Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 4 -->
-                              <tr>
-                                  <td>4</td>
-                                  <td>Dodi Pratama</td>
-                                  <td>Jl. Perintis No. 22, Makassar</td>
-                                  <td>084567890123</td>
-                                  <td><span class="badge badge-success">Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 5 -->
-                              <tr>
-                                  <td>5</td>
-                                  <td>Eva Wijaya</td>
-                                  <td>Jl. Perintis No. 15, Makassar</td>
-                                  <td>085678901234</td>
-                                  <td><span class="badge badge-warning">Pending</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                          </tbody>
-                      </table>
-                    </div>
-                  </div>
+            <div class="content-wrapper">
+                <div class="page-header">
+                <h3 class="page-title">Tambah Admin</h3>
                 </div>
-              </div>
+                <div class="row">
+                <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                    <div class="card-body">
+                        <form class="forms-sample" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="nama_222146">Nama</label>
+                            <input type="text" class="form-control" name="nama_222146" id="nama_222146" placeholder="Nama" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="username_admin_222146">Username</label>
+                            <input type="text" class="form-control" name="username_admin_222146" id="username_admin_222146" placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_admin_222146">Password</label>
+                            <input type="password" class="form-control" name="password_admin_222146" id="password_admin_222146" placeholder="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email_admin_222146">Email</label>
+                            <input type="email" class="form-control" name="email_admin_222146" id="email_admin_222146" placeholder="Email" required>
+                        </div>
+                        <button type="submit" name="submit_admin" class="btn btn-primary me-2">Submit</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                </div>
             </div>
-          </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:../../partials/_footer.html -->
-          <footer class="footer">
-            <div class="d-sm-flex justify-content-center justify-content-sm-between">
-              <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 Stellar. All rights reserved. <a href="#"> Terms of use</a><a href="#">Privacy Policy</a></span>
-              <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="icon-heart text-danger"></i></span>
-            </div>
-          </footer>
-          <!-- partial -->
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 Stellar. All rights reserved. <a href="#"> Terms of use</a><a href="#">Privacy Policy</a></span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="icon-heart text-danger"></i></span>
+                </div>
+            </footer>
+            <!-- partial -->
         </div>
         <!-- main-panel ends -->
       </div>
@@ -329,11 +289,7 @@ if(isset($_GET['hal']) == "hapus"){
     <!-- endinject -->
     <!-- Custom js for this page -->
     <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/file-upload.js"></script>
     <!-- End custom js for this page -->
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <script>
-        new DataTable('#example');
-    </script>
   </body>
 </html>

@@ -212,7 +212,7 @@ if (!isset($_SESSION['username_admin'])) {
                         <div class="inner-card-text">
                           <span class="report-title">Total Pengguna</span>
                           <h4>20</h4>
-                          <a href="pelanggan.php"><span class="report-count">Lihat</span></a>
+                          <a href="pengguna.php"><span class="report-count">Lihat</span></a>
                         </div>
                         <div class="inner-card-icon bg-warning">
                           <i class="icon-globe-alt"></i>

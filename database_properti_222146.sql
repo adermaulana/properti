@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2025 at 05:13 PM
+-- Generation Time: Apr 27, 2025 at 03:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,15 +55,16 @@ CREATE TABLE `agen_222146` (
   `username_222146` varchar(255) NOT NULL,
   `password_222146` varchar(255) NOT NULL,
   `kontak_222146` varchar(50) NOT NULL,
-  `email_222146` varchar(100) NOT NULL
+  `alamat_222146` text NOT NULL,
+  `created_at_222146` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `agen_222146`
 --
 
-INSERT INTO `agen_222146` (`id_agen_222146`, `nama_agen_222146`, `username_222146`, `password_222146`, `kontak_222146`, `email_222146`) VALUES
-(1, 'agen', 'agen', '941730a7089d81c58c743a7577a51640', '0853', 'agen@gmail.com');
+INSERT INTO `agen_222146` (`id_agen_222146`, `nama_agen_222146`, `username_222146`, `password_222146`, `kontak_222146`, `alamat_222146`, `created_at_222146`) VALUES
+(4, 'agenda', 'agenda', 'd0dbdfd8edf8dd1608405055c26adc94', 'agenda', 'agenda', '2025-04-27 12:40:54');
 
 -- --------------------------------------------------------
 
@@ -88,9 +89,10 @@ CREATE TABLE `pembayaran_222146` (
 CREATE TABLE `pengguna_222146` (
   `id_pengguna_222146` int(11) NOT NULL,
   `nama_222146` varchar(255) NOT NULL,
+  `no_hp_222146` varchar(20) NOT NULL,
+  `alamat_222146` text NOT NULL,
   `username_222146` varchar(50) NOT NULL,
   `password_222146` varchar(255) NOT NULL,
-  `email_222146` varchar(100) NOT NULL,
   `created_at_222146` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -98,8 +100,8 @@ CREATE TABLE `pengguna_222146` (
 -- Dumping data for table `pengguna_222146`
 --
 
-INSERT INTO `pengguna_222146` (`id_pengguna_222146`, `nama_222146`, `username_222146`, `password_222146`, `email_222146`, `created_at_222146`) VALUES
-(1, 'pengguna', 'pengguna', '8b097b8a86f9d6a991357d40d3d58634', 'pengguna@gmail.com', '2025-04-13 05:01:56');
+INSERT INTO `pengguna_222146` (`id_pengguna_222146`, `nama_222146`, `no_hp_222146`, `alamat_222146`, `username_222146`, `password_222146`, `created_at_222146`) VALUES
+(6, 'tes', '0854', 'tes', 'tes', '28b662d883b6d76fd96e4ddc5e9ba780', '2025-04-27 12:32:41');
 
 -- --------------------------------------------------------
 
@@ -110,10 +112,25 @@ INSERT INTO `pengguna_222146` (`id_pengguna_222146`, `nama_222146`, `username_22
 CREATE TABLE `properti_222146` (
   `id_properti_222146` int(11) NOT NULL,
   `nama_properti_222146` varchar(100) NOT NULL,
-  `alamat_222146` varchar(255) NOT NULL,
+  `lokasi_222146` varchar(255) NOT NULL,
   `harga_222146` decimal(15,2) NOT NULL,
-  `id_agen_222146` int(11) DEFAULT NULL
+  `id_agen_222146` int(11) DEFAULT NULL,
+  `luas_bangunan_222146` varchar(50) NOT NULL,
+  `luas_tanah_222146` varchar(50) NOT NULL,
+  `kamar_tidur_222146` varchar(50) NOT NULL,
+  `kamar_mandi_222146` varchar(50) NOT NULL,
+  `foto_222146` varchar(255) NOT NULL,
+  `deskripsi_222146` text NOT NULL,
+  `nomor_telepon_222146` varchar(50) NOT NULL,
+  `status_222146` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `properti_222146`
+--
+
+INSERT INTO `properti_222146` (`id_properti_222146`, `nama_properti_222146`, `lokasi_222146`, `harga_222146`, `id_agen_222146`, `luas_bangunan_222146`, `luas_tanah_222146`, `kamar_tidur_222146`, `kamar_mandi_222146`, `foto_222146`, `deskripsi_222146`, `nomor_telepon_222146`, `status_222146`) VALUES
+(1, 'udin', '23', 24000.00, 4, '23', '23', '43', '2', '27042025150334Screenshot (3).png', 'dw', 'das', 'Tersedia');
 
 -- --------------------------------------------------------
 
@@ -160,8 +177,7 @@ ALTER TABLE `admin_222146`
 -- Indexes for table `agen_222146`
 --
 ALTER TABLE `agen_222146`
-  ADD PRIMARY KEY (`id_agen_222146`),
-  ADD UNIQUE KEY `email_222146` (`email_222146`);
+  ADD PRIMARY KEY (`id_agen_222146`);
 
 --
 -- Indexes for table `pembayaran_222146`
@@ -175,8 +191,7 @@ ALTER TABLE `pembayaran_222146`
 --
 ALTER TABLE `pengguna_222146`
   ADD PRIMARY KEY (`id_pengguna_222146`),
-  ADD UNIQUE KEY `username_222146` (`username_222146`),
-  ADD UNIQUE KEY `email_222146` (`email_222146`);
+  ADD UNIQUE KEY `username_222146` (`username_222146`);
 
 --
 -- Indexes for table `properti_222146`
@@ -209,13 +224,13 @@ ALTER TABLE `transaksi_222146`
 -- AUTO_INCREMENT for table `admin_222146`
 --
 ALTER TABLE `admin_222146`
-  MODIFY `id_admin_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_admin_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `agen_222146`
 --
 ALTER TABLE `agen_222146`
-  MODIFY `id_agen_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_agen_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pembayaran_222146`
@@ -227,13 +242,13 @@ ALTER TABLE `pembayaran_222146`
 -- AUTO_INCREMENT for table `pengguna_222146`
 --
 ALTER TABLE `pengguna_222146`
-  MODIFY `id_pengguna_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pengguna_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `properti_222146`
 --
 ALTER TABLE `properti_222146`
-  MODIFY `id_properti_222146` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_properti_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `rating_222146`

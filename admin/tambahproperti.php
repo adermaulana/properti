@@ -11,6 +11,77 @@ if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
 }
 
 
+if (isset($_POST['simpan'])) {
+  $nama_properti = mysqli_real_escape_string($koneksi, $_POST['nama_properti']);
+  $id_agen = mysqli_real_escape_string($koneksi, $_POST['id_agen']);
+  $harga = mysqli_real_escape_string($koneksi, $_POST['harga']);
+  $luas_bangunan = mysqli_real_escape_string($koneksi, $_POST['luas_bangunan']);
+  $luas_tanah = mysqli_real_escape_string($koneksi, $_POST['luas_tanah']);
+  $kamar_tidur = mysqli_real_escape_string($koneksi, $_POST['kamar_tidur']);
+  $kamar_mandi = mysqli_real_escape_string($koneksi, $_POST['kamar_mandi']);
+  $deskripsi = mysqli_real_escape_string($koneksi, $_POST['keterangan']);
+  $lokasi = mysqli_real_escape_string($koneksi, $_POST['lokasi']);
+  $nomor_telepon = mysqli_real_escape_string($koneksi, $_POST['whatsapp']);
+  $status = mysqli_real_escape_string($koneksi, $_POST['status']);
+
+  
+  // Handle file upload
+  $foto = $_FILES['foto_properti']['name'];
+  $tmp = $_FILES['foto_properti']['tmp_name'];
+  $fotobaru = date('dmYHis').$foto;
+  $path = "uploads/".$fotobaru;
+  
+  if(move_uploaded_file($tmp, $path)) {
+      // Insert new property data
+      $insert = mysqli_query($koneksi, "INSERT INTO properti_222146 (
+                  id_properti_222146,
+                  nama_properti_222146,
+                  lokasi_222146,
+                  harga_222146,
+                  id_agen_222146,
+                  luas_bangunan_222146,
+                  luas_tanah_222146,
+                  kamar_tidur_222146,
+                  kamar_mandi_222146,
+                  foto_222146,
+                  deskripsi_222146,
+                  nomor_telepon_222146,
+                  status_222146
+              ) VALUES (
+                  '$id_properti',
+                  '$nama_properti',
+                  '$lokasi',
+                  '$harga',
+                  '$id_agen',
+                  '$luas_bangunan',
+                  '$luas_tanah',
+                  '$kamar_tidur',
+                  '$kamar_mandi',
+                  '$fotobaru',
+                  '$deskripsi',
+                  '$nomor_telepon',
+                  '$status'
+              )");
+
+      if ($insert) {
+          echo "<script>
+                  alert('Data properti berhasil ditambahkan!');
+                  document.location='properti.php';
+              </script>";
+      } else {
+          echo "<script>
+                  alert('Gagal menambahkan data: ".mysqli_error($koneksi)."');
+                  window.history.back();
+              </script>";
+      }
+  } else {
+      echo "<script>
+              alert('Gagal mengupload foto!');
+              window.history.back();
+          </script>";
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -194,10 +265,7 @@ if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
                 <div class="card">
                   <div class="card-body">
                     <form class="forms-sample" method="POST" enctype="multipart/form-data">
-                      <div class="form-group">
-                        <label for="id_properti">Id Properti</label>
-                        <input type="text" class="form-control" name="id_properti" id="id_properti" placeholder="Id Properti" required>
-                      </div>
+
                       <div class="form-group">
                         <label for="nama_properti">Nama Properti</label>
                         <input type="text" class="form-control" id="nama_properti" name="nama_properti" placeholder="Cluster Dahlia - Type 36/72" required>
@@ -206,11 +274,12 @@ if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
                         <label for="id_agen">Pilih Agen</label>
                         <select class="form-control" id="id_agen" name="id_agen" required>
                           <option value="" disabled selected>-- Pilih Agen --</option>
-                          <option value="agen1">Agen Budi</option>
-                          <option value="agen2">Agen Ani</option>
-                          <option value="agen3">Agen Citra</option>
-                          <option value="agen4">Agen Dodi</option>
-                          <option value="agen5">Agen Eva</option>
+                          <?php
+                            $query_agen = mysqli_query($koneksi, "SELECT * FROM agen_222146 ORDER BY nama_agen_222146 ASC");
+                            while($agen = mysqli_fetch_array($query_agen)) {
+                              echo "<option value='".$agen['id_agen_222146']."'>".$agen['nama_agen_222146']."</option>";
+                            }
+                          ?>
                         </select>
                       </div>
                       <div class="form-group">

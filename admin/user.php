@@ -232,7 +232,7 @@ if(isset($_GET['hal']) == "hapus"){
                                 <td><?= $data['created_at_admin_222146'] ?></td>
                                 <td>
                                 <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
+                                <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="user.php?hal=hapus&id=<?php echo $data['id_admin_222146']; ?>">Hapus</a>
                                 </td>
                             </tr>
                             <?php

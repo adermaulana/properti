@@ -12,12 +12,12 @@ if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
 
 if(isset($_GET['hal']) == "hapus"){
 
-    $hapus = mysqli_query($koneksi, "DELETE FROM pelanggan WHERE id = '$_GET[id]'");
+    $hapus = mysqli_query($koneksi, "DELETE FROM pengguna_222146 WHERE id_pengguna_222146 = '$_GET[id]'");
   
     if($hapus){
         echo "<script>
         alert('Hapus data sukses!');
-        document.location='pelanggan.php';
+        document.location='pengguna.php';
         </script>";
     }
   }
@@ -207,84 +207,39 @@ if(isset($_GET['hal']) == "hapus"){
                   <div class="card-body">
                     <a class="btn btn-success mb-3" href="tambahpengguna.php">Tambah Data</a>
                     <div class="table-responsive">
-                      <table class="table display" id="example" style="width:100%">
-                          <thead>
-                              <tr>
-                                  <th>No</th>
-                                  <th>Nama</th>
-                                  <th>Alamat</th>
-                                  <th>No HP</th>
-                                  <th>Status</th>
-                                  <th>Aksi</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <!-- Customer 1 -->
-                              <tr>
-                                  <td>1</td>
-                                  <td>Budi Santoso</td>
-                                  <td>Jl. Perintis No. 12, Makassar</td>
-                                  <td>081234567890</td>
-                                  <td><span class="badge badge-success">Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 2 -->
-                              <tr>
-                                  <td>2</td>
-                                  <td>Ani Lestari</td>
-                                  <td>Jl. Perintis No. 45, Makassar</td>
-                                  <td>082345678901</td>
-                                  <td><span class="badge badge-success">Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 3 -->
-                              <tr>
-                                  <td>3</td>
-                                  <td>Citra Dewi</td>
-                                  <td>Jl. Perintis No. 8, Makassar</td>
-                                  <td>083456789012</td>
-                                  <td><span class="badge badge-secondary">Non-Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 4 -->
-                              <tr>
-                                  <td>4</td>
-                                  <td>Dodi Pratama</td>
-                                  <td>Jl. Perintis No. 22, Makassar</td>
-                                  <td>084567890123</td>
-                                  <td><span class="badge badge-success">Aktif</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Customer 5 -->
-                              <tr>
-                                  <td>5</td>
-                                  <td>Eva Wijaya</td>
-                                  <td>Jl. Perintis No. 15, Makassar</td>
-                                  <td>085678901234</td>
-                                  <td><span class="badge badge-warning">Pending</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                          </tbody>
-                      </table>
+                    <table class="table display" id="example" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Username</th>
+                                <th>Alamat</th>
+                                <th>No HP</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                          $no = 1;
+                          $tampil = mysqli_query($koneksi, "SELECT * FROM pengguna_222146 ORDER BY id_pengguna_222146 DESC");
+                          while($data = mysqli_fetch_array($tampil)):
+                        ?>
+                            <tr>
+                                <td><?php echo $no++; ?></td>
+                                <td><?php echo $data['nama_222146']; ?></td>
+                                <td><?php echo $data['username_222146']; ?></td>
+                                <td><?php echo $data['alamat_222146']; ?></td>
+                                <td><?php echo $data['no_hp_222146']; ?></td>
+                                <td>
+                                    <a class="badge badge-warning text-decoration-none" href="editpengguna.php?hal=edit&id=<?php echo $data['id_pengguna_222146']; ?>">Edit</a>
+                                    <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="pengguna.php?hal=hapus&id=<?php echo $data['id_pengguna_222146']; ?>">Hapus</a>
+                                </td>
+                            </tr>
+                        <?php
+                          endwhile; 
+                        ?>
+                        </tbody>
+                    </table>
                     </div>
                   </div>
                 </div>

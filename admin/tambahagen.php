@@ -11,7 +11,53 @@ if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
 }
 
 
+if (isset($_POST['simpan'])) {
+  $nama = mysqli_real_escape_string($koneksi, $_POST['nama_agen_222146']);
+  $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat_222146']);
+  $telepon = mysqli_real_escape_string($koneksi, $_POST['kontak_222146']);
+  $username = mysqli_real_escape_string($koneksi, $_POST['username_222146']);
+  $password = md5($_POST['password_222146']);
+  
+  // Check if username already exists
+  $check = mysqli_query($koneksi, "SELECT * FROM agen_222146 WHERE username_222146='$username'");
+  
+  if (mysqli_num_rows($check) > 0) {
+      echo "<script>
+              alert('Username sudah digunakan oleh agen lain!');
+              window.history.back(); // This will go back without clearing form data
+          </script>";
+      exit;
+  }
 
+  // Insert new data
+  $insert = mysqli_query($koneksi, "INSERT INTO agen_222146 (
+              nama_agen_222146, 
+              alamat_222146, 
+              kontak_222146, 
+              username_222146, 
+              password_222146,
+              created_at_222146
+          ) VALUES (
+              '$nama', 
+              '$alamat', 
+              '$telepon', 
+              '$username', 
+              '$password',
+              NOW()
+          )");
+
+  if ($insert) {
+      echo "<script>
+              alert('Data agen berhasil ditambahkan!');
+              document.location='agen.php';
+          </script>";
+  } else {
+      echo "<script>
+              alert('Gagal menambahkan data: ".mysqli_error($koneksi)."');
+              window.history.back();
+          </script>";
+  }
+}
 
 
 
@@ -196,35 +242,29 @@ if($_SESSION['status'] != 'login' || !isset($_SESSION['username_admin'])){
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <form class="forms-sample" method="POST" enctype="multipart/form-data">
+                  <form class="forms-sample" method="POST" enctype="multipart/form-data">
                       <div class="form-group">
-                        <label for="id_kamar">Nama Agen</label>
-                        <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama" required>
+                        <label for="nama">Nama Agen</label>
+                        <input type="text" class="form-control" name="nama_agen_222146" id="nama" placeholder="Nama" required>
                       </div>
                       <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                        <input type="text" class="form-control" name="username_222146" id="username" placeholder="Username" required>
                       </div>
                       <div class="form-group">
                         <label for="exampleTextarea1">Alamat</label>
-                        <textarea class="form-control" id="alamat" name="alamat" rows="4" required></textarea>
+                        <textarea class="form-control" id="alamat" name="alamat_222146" rows="4" required></textarea>
                       </div>
                       <div class="form-group">
                         <label for="telepon">No Hp</label>
-                        <input type="text" class="form-control" name="telepon" id="telepon" placeholder="No Hp" required>
+                        <input type="text" class="form-control" name="kontak_222146" id="telepon" placeholder="No Hp" required>
                       </div>
                       <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" placeholder="" required>
+                        <input type="password" class="form-control" name="password_222146" id="password" placeholder="" required>
                       </div>
-                      <div class="form-group">
-                        <label for="exampleSelectGender">Status</label>
-                        <select class="form-select" name="status" id="status" required>
-                          <option value="Aktif">Aktif</option>
-                          <option value="Tidak Aktif">Tidak Aktif</option>
-                        </select>
-                      </div>
-                      <button type="submit" name="" class="btn btn-primary me-2">Submit</button>
+
+                      <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
                     </form>
                   </div>
                 </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2025 at 03:15 PM
+-- Generation Time: May 04, 2025 at 10:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,7 +64,7 @@ CREATE TABLE `agen_222146` (
 --
 
 INSERT INTO `agen_222146` (`id_agen_222146`, `nama_agen_222146`, `username_222146`, `password_222146`, `kontak_222146`, `alamat_222146`, `created_at_222146`) VALUES
-(4, 'agenda', 'agenda', 'd0dbdfd8edf8dd1608405055c26adc94', 'agenda', 'agenda', '2025-04-27 12:40:54');
+(4, 'agen', 'agen', '941730a7089d81c58c743a7577a51640', 'agen', 'agen', '2025-05-04 20:10:30');
 
 -- --------------------------------------------------------
 
@@ -125,13 +125,6 @@ CREATE TABLE `properti_222146` (
   `status_222146` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `properti_222146`
---
-
-INSERT INTO `properti_222146` (`id_properti_222146`, `nama_properti_222146`, `lokasi_222146`, `harga_222146`, `id_agen_222146`, `luas_bangunan_222146`, `luas_tanah_222146`, `kamar_tidur_222146`, `kamar_mandi_222146`, `foto_222146`, `deskripsi_222146`, `nomor_telepon_222146`, `status_222146`) VALUES
-(1, 'udin', '23', 24000.00, 4, '23', '23', '43', '2', '27042025150334Screenshot (3).png', 'dw', 'das', 'Tersedia');
-
 -- --------------------------------------------------------
 
 --
@@ -157,7 +150,7 @@ CREATE TABLE `transaksi_222146` (
   `id_transaksi_222146` int(11) NOT NULL,
   `id_pengguna_222146` int(11) DEFAULT NULL,
   `id_properti_222146` int(11) DEFAULT NULL,
-  `status_222146` enum('dipesan','menunggu pembayaran','selesai') DEFAULT 'dipesan',
+  `status_222146` enum('pending','dikonfirmasi','batal') DEFAULT 'pending',
   `tanggal_transaksi_222146` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -236,7 +229,7 @@ ALTER TABLE `agen_222146`
 -- AUTO_INCREMENT for table `pembayaran_222146`
 --
 ALTER TABLE `pembayaran_222146`
-  MODIFY `id_pembayaran_222146` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pembayaran_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pengguna_222146`
@@ -248,7 +241,7 @@ ALTER TABLE `pengguna_222146`
 -- AUTO_INCREMENT for table `properti_222146`
 --
 ALTER TABLE `properti_222146`
-  MODIFY `id_properti_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_properti_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rating_222146`
@@ -260,7 +253,7 @@ ALTER TABLE `rating_222146`
 -- AUTO_INCREMENT for table `transaksi_222146`
 --
 ALTER TABLE `transaksi_222146`
-  MODIFY `id_transaksi_222146` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_transaksi_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -270,7 +263,7 @@ ALTER TABLE `transaksi_222146`
 -- Constraints for table `pembayaran_222146`
 --
 ALTER TABLE `pembayaran_222146`
-  ADD CONSTRAINT `pembayaran_222146_ibfk_1` FOREIGN KEY (`id_transaksi_222146`) REFERENCES `transaksi_222146` (`id_transaksi_222146`);
+  ADD CONSTRAINT `pembayaran_222146_ibfk_1` FOREIGN KEY (`id_transaksi_222146`) REFERENCES `transaksi_222146` (`id_transaksi_222146`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `properti_222146`
@@ -289,8 +282,8 @@ ALTER TABLE `rating_222146`
 -- Constraints for table `transaksi_222146`
 --
 ALTER TABLE `transaksi_222146`
-  ADD CONSTRAINT `transaksi_222146_ibfk_1` FOREIGN KEY (`id_pengguna_222146`) REFERENCES `pengguna_222146` (`id_pengguna_222146`),
-  ADD CONSTRAINT `transaksi_222146_ibfk_2` FOREIGN KEY (`id_properti_222146`) REFERENCES `properti_222146` (`id_properti_222146`);
+  ADD CONSTRAINT `transaksi_222146_ibfk_1` FOREIGN KEY (`id_pengguna_222146`) REFERENCES `pengguna_222146` (`id_pengguna_222146`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `transaksi_222146_ibfk_2` FOREIGN KEY (`id_properti_222146`) REFERENCES `properti_222146` (`id_properti_222146`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

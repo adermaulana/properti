@@ -5,24 +5,18 @@ include 'koneksi.php';
 session_start();
 
 
-  if(isset($_SESSION['username_admin'])) {
-    $isLoggedIn = true;
-    $namaAdmin = $_SESSION['nama_admin']; // Ambil nama user dari session
-  } else if(isset($_SESSION['username_pelanggan'])) {
-    $isLoggedIn = true;
-    $namaPelanggan = $_SESSION['nama_pelanggan']; // Ambil nama user dari session
-  } 
-
-  else {
-      $isLoggedIn = false;
-  }
-
-
-  if (isset($_POST['pesan'])) {
-   
-   header("location:kamar.php");
-  
-  }
+if (isset($_SESSION['username_admin'])) {
+   $isLoggedIn = true;
+   $namaAdmin = $_SESSION['nama_admin']; // Ambil nama user dari session
+} elseif (isset($_SESSION['username_pelanggan'])) {
+   $isLoggedIn = true;
+   $namaPelanggan = $_SESSION['nama_pelanggan']; // Ambil nama user dari session
+} elseif (isset($_SESSION['username_agen'])) {
+   $isLoggedIn = true;
+   $namaAgen = $_SESSION['nama_agen']; // Ambil nama user dari session
+} else {
+   $isLoggedIn = false;
+}
 
 ?>
 <!DOCTYPE html>
@@ -102,17 +96,19 @@ session_start();
                                 </li>
                             </ul>
                             <ul class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                 <?php if($isLoggedIn): ?>
-                                       <?php if(isset($_SESSION['username_admin'])): ?>
-                                          <a href="admin" class="nav-link">Dashboard</a>
-                                       <?php else: ?>
-                                          <a href="pelanggan" class="nav-link">Dashboard</a>
-                                       <?php endif; ?>
-                                 <?php else: ?>
-                                    <a class="nav-link" href="login.php">Login</a>
-                                 <?php endif; ?>
-                                </li>
+                            <li class="nav-item">
+                                        <?php if($isLoggedIn): ?>
+                                            <?php if(isset($_SESSION['username_admin'])): ?>
+                                            <a href="admin" class="nav-link">Dashboard</a>
+                                            <?php elseif(isset($_SESSION['username_agen'])): ?>
+                                            <a href="agen" class="nav-link">Dashboard</a>
+                                            <?php else: ?>
+                                            <a href="pelanggan" class="nav-link">Dashboard</a>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                        <a class="nav-link" href="login.php">Login</a>
+                                        <?php endif; ?>
+                                    </li>
                             </ul>
                         </div>
                     </nav>

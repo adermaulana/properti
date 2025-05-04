@@ -231,7 +231,7 @@ if(isset($_GET['hal']) == "hapus"){
                                 <td><?php echo $data['alamat_222146']; ?></td>
                                 <td><?php echo $data['no_hp_222146']; ?></td>
                                 <td>
-                                    <a class="badge badge-warning text-decoration-none" href="editpengguna.php?hal=edit&id=<?php echo $data['id_pengguna_222146']; ?>">Edit</a>
+                                    <!-- <a class="badge badge-warning text-decoration-none" href="editpengguna.php?hal=edit&id=<?php echo $data['id_pengguna_222146']; ?>">Edit</a> -->
                                     <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="pengguna.php?hal=hapus&id=<?php echo $data['id_pengguna_222146']; ?>">Hapus</a>
                                 </td>
                             </tr>

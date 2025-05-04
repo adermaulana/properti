@@ -4,19 +4,33 @@ include 'koneksi.php';
 
 session_start();
 
+// Ambil ID properti dari URL
+$id_properti = isset($_GET['id']) ? $_GET['id'] : null;
+
+// Query untuk mendapatkan detail properti berdasarkan ID
+$query_properti = "SELECT * FROM properti_222146 WHERE id_properti_222146 = '$id_properti'";
+$result_properti = mysqli_query($koneksi, $query_properti);
+$properti = mysqli_fetch_assoc($result_properti);
+
+if(!$properti) {
+    // Jika properti tidak ditemukan
+    header("Location: properti.php");
+    exit();
+}
+
 if (isset($_SESSION['username_admin'])) {
     $isLoggedIn = true;
     $namaAdmin = $_SESSION['nama_admin']; // Ambil nama user dari session
 } elseif (isset($_SESSION['username_pelanggan'])) {
     $isLoggedIn = true;
     $namaPelanggan = $_SESSION['nama_pelanggan']; // Ambil nama user dari session
+} elseif (isset($_SESSION['username_agen'])) {
+    $isLoggedIn = true;
+    $namaAgen = $_SESSION['nama_agen']; // Ambil nama user dari session
 } else {
     $isLoggedIn = false;
 }
 
-if (isset($_POST['pesan'])) {
-    header('location:kamar.php');
-}
 
 ?>
 
@@ -347,11 +361,13 @@ if (isset($_POST['pesan'])) {
                                 <ul class="navbar-nav ml-auto">
                                     <li class="nav-item">
                                         <?php if($isLoggedIn): ?>
-                                        <?php if(isset($_SESSION['username_admin'])): ?>
-                                        <a href="admin" class="nav-link">Dashboard</a>
-                                        <?php else: ?>
-                                        <a href="pelanggan" class="nav-link">Dashboard</a>
-                                        <?php endif; ?>
+                                            <?php if(isset($_SESSION['username_admin'])): ?>
+                                            <a href="admin" class="nav-link">Dashboard</a>
+                                            <?php elseif(isset($_SESSION['username_agen'])): ?>
+                                            <a href="agen" class="nav-link">Dashboard</a>
+                                            <?php else: ?>
+                                            <a href="pelanggan" class="nav-link">Dashboard</a>
+                                            <?php endif; ?>
                                         <?php else: ?>
                                         <a class="nav-link" href="login.php">Login</a>
                                         <?php endif; ?>
@@ -385,7 +401,7 @@ if (isset($_POST['pesan'])) {
                 <div class="col-md-8">
                     <div class="detail_gallery">
                         <div class="main_image">
-                            <img src="assets/images/36.jpg" alt="Cluster Dahlia" class="img-fluid rounded" />
+                            <img src="admin/uploads/<?= $properti['foto_222146'] ?>" alt="Cluster Dahlia" class="img-fluid rounded" />
                             <div class="property_tag">
                                 <span class="tag_best">BEST DEAL</span>
                             </div>
@@ -397,9 +413,9 @@ if (isset($_POST['pesan'])) {
                 <!-- Property Quick Info -->
                 <div class="col-md-4">
                     <div class="property_quick_info">
-                        <h2>Cluster Dahlia - Type 36/72</h2>
+                        <h2><?php echo $properti['nama_properti_222146']; ?></h2>
                         <div class="property_price_detail">
-                            <h3>Rp. 450.000.000</h3>
+                            <h3>Rp. <?php echo number_format($properti['harga_222146'], 0, ',', '.'); ?></h3>
                             <span class="promo">Dp Mulai 5%</span>
                         </div>
                         <div class="property_specs_detail mt-4">
@@ -407,34 +423,28 @@ if (isset($_POST['pesan'])) {
                                 <i class="fas fa-ruler-combined"></i>
                                 <div class="spec_content">
                                     <h5>Luas Bangunan/Tanah</h5>
-                                    <p>36m² / 72m²</p>
+                                    <p><?php echo $properti['luas_bangunan_222146']; ?>m² / <?php echo $properti['luas_tanah_222146']; ?>m²</p>
                                 </div>
                             </div>
-                            <div class="spec_item">
-                                <i class="fas fa-bed"></i>
-                                <div class="spec_content">
-                                    <h5>Kamar Tidur</h5>
-                                    <p>2 Kamar</p>
-                                </div>
-                            </div>
-                            <div class="spec_item">
-                                <i class="fas fa-bath"></i>
-                                <div class="spec_content">
-                                    <h5>Kamar Mandi</h5>
-                                    <p>1 Kamar Mandi</p>
-                                </div>
-                            </div>
-                            <div class="spec_item">
-                                <i class="fas fa-car"></i>
-                                <div class="spec_content">
-                                    <h5>Carport</h5>
-                                    <p>1 Mobil</p>
-                                </div>
-                            </div>
+                            <!-- Item spesifikasi lainnya -->
                         </div>
                         <div class="contact_buttons mt-4">
-                            <a href="https://wa.me/628123456789" class="btn btn-success btn-block"><i
-                                    class="fab fa-whatsapp"></i> Hubungi via WhatsApp</a>
+                            <?php if($isLoggedIn && isset($_SESSION['username_pelanggan'])): ?>
+                                <form method="post" action="proses_pemesanan.php">
+                                    <input type="hidden" name="id_properti" value="<?php echo $properti['id_properti_222146']; ?>">
+                                    <input type="hidden" name="harga_properti" value="<?php echo $properti['harga_222146']; ?>">
+                                    <button type="submit" name="beli" class="btn btn-primary btn-block">
+                                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                                    </button>
+                                </form>
+                            <?php else: ?>
+                                <a href="login.php" class="btn btn-primary btn-block">
+                                    <i class="fas fa-shopping-cart"></i> Login untuk Membeli
+                                </a>
+                            <?php endif; ?>
+                            <a href="https://wa.me/628123456789" class="btn btn-success btn-block mt-2">
+                                <i class="fab fa-whatsapp"></i> Hubungi via WhatsApp
+                            </a>
                         </div>
                     </div>
                 </div>

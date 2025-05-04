@@ -4,7 +4,76 @@ include '../koneksi.php';
 
 session_start();
 
+if (isset($_POST['simpan'])) {
+  $nama_properti = mysqli_real_escape_string($koneksi, $_POST['nama_properti']);
+  $id_agen = $_SESSION['id_agen'];
+  $harga = mysqli_real_escape_string($koneksi, $_POST['harga']);
+  $luas_bangunan = mysqli_real_escape_string($koneksi, $_POST['luas_bangunan']);
+  $luas_tanah = mysqli_real_escape_string($koneksi, $_POST['luas_tanah']);
+  $kamar_tidur = mysqli_real_escape_string($koneksi, $_POST['kamar_tidur']);
+  $kamar_mandi = mysqli_real_escape_string($koneksi, $_POST['kamar_mandi']);
+  $deskripsi = mysqli_real_escape_string($koneksi, $_POST['keterangan']);
+  $lokasi = mysqli_real_escape_string($koneksi, $_POST['lokasi']);
+  $nomor_telepon = mysqli_real_escape_string($koneksi, $_POST['whatsapp']);
+  $status = mysqli_real_escape_string($koneksi, $_POST['status']);
 
+  
+  // Handle file upload
+  $foto = $_FILES['foto_properti']['name'];
+  $tmp = $_FILES['foto_properti']['tmp_name'];
+  $fotobaru = date('dmYHis').$foto;
+  $path = "../admin/uploads/".$fotobaru;
+  
+  if(move_uploaded_file($tmp, $path)) {
+      // Insert new property data
+      $insert = mysqli_query($koneksi, "INSERT INTO properti_222146 (
+                  id_properti_222146,
+                  nama_properti_222146,
+                  lokasi_222146,
+                  harga_222146,
+                  id_agen_222146,
+                  luas_bangunan_222146,
+                  luas_tanah_222146,
+                  kamar_tidur_222146,
+                  kamar_mandi_222146,
+                  foto_222146,
+                  deskripsi_222146,
+                  nomor_telepon_222146,
+                  status_222146
+              ) VALUES (
+                  '$id_properti',
+                  '$nama_properti',
+                  '$lokasi',
+                  '$harga',
+                  '$id_agen',
+                  '$luas_bangunan',
+                  '$luas_tanah',
+                  '$kamar_tidur',
+                  '$kamar_mandi',
+                  '$fotobaru',
+                  '$deskripsi',
+                  '$nomor_telepon',
+                  '$status'
+              )");
+
+      if ($insert) {
+          echo "<script>
+                  alert('Data properti berhasil ditambahkan!');
+                  document.location='properti.php';
+              </script>";
+      } else {
+          echo "<script>
+                  alert('Gagal menambahkan data: ".mysqli_error($koneksi)."');
+                  window.history.back();
+              </script>";
+      }
+  } else {
+      echo "<script>
+              alert('Gagal mengupload foto!');
+              window.history.back();
+          </script>";
+  }
+}
 
 ?>
 
@@ -14,7 +83,7 @@ session_start();
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin</title>
+    <title>Agen</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendors/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="assets/vendors/flag-icon-css/css/flag-icons.min.css">

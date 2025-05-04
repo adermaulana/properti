@@ -5,24 +5,21 @@
    session_start();
 
 
-   if(isset($_SESSION['username_admin'])) {
+   if (isset($_SESSION['username_admin'])) {
       $isLoggedIn = true;
       $namaAdmin = $_SESSION['nama_admin']; // Ambil nama user dari session
-   } else if(isset($_SESSION['username_pelanggan'])) {
+  } elseif (isset($_SESSION['username_pelanggan'])) {
       $isLoggedIn = true;
       $namaPelanggan = $_SESSION['nama_pelanggan']; // Ambil nama user dari session
-   } 
+  } elseif (isset($_SESSION['username_agen'])) {
+      $isLoggedIn = true;
+      $namaAgen = $_SESSION['nama_agen']; // Ambil nama user dari session
+  } else {
+      $isLoggedIn = false;
+  }
 
-   else {
-         $isLoggedIn = false;
-   }
-
-
-   if (isset($_POST['pesan'])) {
-      
-      header("location:kamar.php");
-   
-   }
+  $query = "SELECT * FROM properti_222146 WHERE status_222146 = 'Tersedia'";
+$result = mysqli_query($koneksi, $query);
 
 ?>
 
@@ -347,17 +344,19 @@
                                 </li>
                             </ul>
                             <ul class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                 <?php if($isLoggedIn): ?>
-                                       <?php if(isset($_SESSION['username_admin'])): ?>
-                                          <a href="admin" class="nav-link">Dashboard</a>
-                                       <?php else: ?>
-                                          <a href="pelanggan" class="nav-link">Dashboard</a>
-                                       <?php endif; ?>
-                                 <?php else: ?>
-                                    <a class="nav-link" href="login.php">Login</a>
-                                 <?php endif; ?>
-                                </li>
+                            <li class="nav-item">
+                                        <?php if($isLoggedIn): ?>
+                                            <?php if(isset($_SESSION['username_admin'])): ?>
+                                            <a href="admin" class="nav-link">Dashboard</a>
+                                            <?php elseif(isset($_SESSION['username_agen'])): ?>
+                                            <a href="agen" class="nav-link">Dashboard</a>
+                                            <?php else: ?>
+                                            <a href="pelanggan" class="nav-link">Dashboard</a>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                        <a class="nav-link" href="login.php">Login</a>
+                                        <?php endif; ?>
+                                    </li>
                             </ul>
                         </div>
                     </nav>
@@ -380,174 +379,40 @@
          </div>
       </div>
       <!-- our_room -->
-      <div  class="our_room">
-         <div class="container">
-           
-                   <div class="row">
-         <!-- Properti 1 -->
-         <div class="col-md-4 col-sm-6">
-            <div id="prop_hover" class="property">
-               <div class="property_img position-relative">
-                  <figure>
-                     <img src="assets/images/36.jpg" alt="Rumah Type 36"/>
-                     <div class="property_tag">
-                        <span class="tag_best">BEST DEAL</span>
-                     </div>
-                  </figure>
-               </div>
-               <div class="property_details">
-                  <h3>Cluster Dahlia - Type 36/72</h3>
-                  <div class="property_specs">
-                     <span><i class="fas fa-ruler-combined"></i> 36m² / 72m²</span>
-                     <span><i class="fas fa-bed"></i> 2 Kamar</span>
-                     <span><i class="fas fa-bath"></i> 1 Kamar Mandi</span>
-                  </div>
-                  <p>Rumah minimalis modern di kawasan asri dan bebas banjir</p>
-                  <div class="property_price">
-                     <h4>Rp. 450.000.000</h4>
-                     <span class="promo">Dp Mulai 5%</span>
-                  </div>
-                  <a href="detail.php" class="btn btn-primary mt-3">Lihat Detail</a>
-               </div>
-            </div>
-         </div>
+    <div class="our_room">
+        <div class="container">
+            <div class="row">
+                <?php while($properti = mysqli_fetch_assoc($result)): ?>
+                <div class="col-md-4 col-sm-6">
+                    <div id="prop_hover" class="property">
+                        <div class="property_img position-relative">
+                            <figure>
+                                <img src="admin/uploads/<?= $properti['foto_222146'] ?>" alt="<?= $properti['nama_properti_222146'] ?>"/>
 
-         <!-- Properti 2 -->
-         <div class="col-md-4 col-sm-6">
-            <div id="prop_hover" class="property">
-               <div class="property_img position-relative">
-                  <figure>
-                     <img src="assets/images/45.jpg" alt="Rumah Type 45"/>
-                     <div class="property_tag">
-                        <span class="tag_new">UNIT BARU</span>
-                     </div>
-                  </figure>
-               </div>
-               <div class="property_details">
-                  <h3>Cluster Mawar - Type 45/90</h3>
-                  <div class="property_specs">
-                     <span><i class="fas fa-ruler-combined"></i> 45m² / 90m²</span>
-                     <span><i class="fas fa-bed"></i> 2 Kamar</span>
-                     <span><i class="fas fa-bath"></i> 2 Kamar Mandi</span>
-                  </div>
-                  <p>Desain modern dengan taman belakang dan carport luas</p>
-                  <div class="property_price">
-                     <h4>Rp. 650.000.000</h4>
-                     <span class="promo">Free Custom Kitchen</span>
-                  </div>
-                  <a href="detail.php" class="btn btn-primary mt-3">Lihat Detail</a>
-               </div>
+                            </figure>
+                        </div>
+                        <div class="property_details">
+                            <h3><?= $properti['nama_properti_222146'] ?></h3>
+                            <div class="property_specs">
+                                <span><i class="fas fa-ruler-combined"></i> <?= $properti['luas_bangunan_222146'] ?>m² / <?= $properti['luas_tanah_222146'] ?>m²</span>
+                                <span><i class="fas fa-bed"></i> <?= $properti['kamar_tidur_222146'] ?> Kamar</span>
+                                <span><i class="fas fa-bath"></i> <?= $properti['kamar_mandi_222146'] ?> Kamar Mandi</span>
+                            </div>
+                            <p><?= substr($properti['deskripsi_222146'], 0, 100) ?>...</p>
+                            <div class="property_price">
+                                <h4>Rp. <?= number_format($properti['harga_222146'], 0, ',', '.') ?></h4>
+                                <?php if(!empty($properti['promo_text_222146'])): ?>
+                                    <span class="promo"><?= $properti['promo_text_222146'] ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <a href="detail.php?id=<?= $properti['id_properti_222146'] ?>" class="btn btn-primary mt-3">Lihat Detail</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endwhile; ?>
             </div>
-         </div>
-
-         <!-- Properti 3 -->
-         <div class="col-md-4 col-sm-6">
-            <div id="prop_hover" class="property">
-               <div class="property_img position-relative">
-                  <figure>
-                     <img src="assets/images/54.jpg" alt="Rumah Type 54"/>
-                     <div class="property_tag">
-                        <span class="tag_sold">TERJUAL</span>
-                     </div>
-                  </figure>
-               </div>
-               <div class="property_details">
-                  <h3>Cluster Anggrek - Type 54/120</h3>
-                  <div class="property_specs">
-                     <span><i class="fas fa-ruler-combined"></i> 54m² / 120m²</span>
-                     <span><i class="fas fa-bed"></i> 3 Kamar</span>
-                     <span><i class="fas fa-bath"></i> 2 Kamar Mandi</span>
-                  </div>
-                  <p>Rumah 2 lantai dengan area taman yang luas dan balkon</p>
-                  <div class="property_price">
-                     <h4>Rp. 850.000.000</h4>
-                     <span class="promo">Bonus AC 2 Unit</span>
-                  </div>
-                  <div class="sold-out-notice">
-                     <p>Maaf, unit ini telah terjual. Silakan lihat properti lainnya.</p>
-                  </div>
-               </div>
-            </div>
-         </div>
-
-         <!-- Properti 4 -->
-         <div class="col-md-4 col-sm-6">
-            <div id="prop_hover" class="property">
-               <div class="property_img position-relative">
-                  <figure>
-                     <img src="assets/images/60.jpg" alt="Rumah Type 60"/>
-                     <div class="property_tag">
-                        <span class="tag_limited">UNIT TERBATAS</span>
-                     </div>
-                  </figure>
-               </div>
-               <div class="property_details">
-                  <h3>Cluster Melati - Type 60/150</h3>
-                  <div class="property_specs">
-                     <span><i class="fas fa-ruler-combined"></i> 60m² / 150m²</span>
-                     <span><i class="fas fa-bed"></i> 3 Kamar</span>
-                     <span><i class="fas fa-bath"></i> 2 Kamar Mandi</span>
-                  </div>
-                  <div class="property_price">
-                     <h4>Rp. 975.000.000</h4>
-                     <span class="promo">KPR DP 0%</span>
-                  </div>
-                  <a href="detail.php" class="btn btn-primary mt-3">Lihat Detail</a>
-               </div>
-            </div>
-         </div>
-
-         <!-- Properti 5 -->
-         <div class="col-md-4 col-sm-6">
-            <div id="prop_hover" class="property">
-               <div class="property_img position-relative">
-                  <figure>
-                     <img src="assets/images/75.jpeg" alt="Rumah Type 75"/>
-                  </figure>
-               </div>
-               <div class="property_details">
-                  <h3>Cluster Tulip - Type 75/180</h3>
-                  <div class="property_specs">
-                     <span><i class="fas fa-ruler-combined"></i> 75m² / 180m²</span>
-                     <span><i class="fas fa-bed"></i> 4 Kamar</span>
-                     <span><i class="fas fa-bath"></i> 3 Kamar Mandi</span>
-                  </div>
-                  <div class="property_price">
-                     <h4>Rp. 1.250.000.000</h4>
-                     <span class="promo">Free Furniture Set</span>
-                  </div>
-                  <a href="detail.php" class="btn btn-primary mt-3">Lihat Detail</a>
-               </div>
-            </div>
-         </div>
-
-         <!-- Properti 6 -->
-         <div class="col-md-4 col-sm-6">
-            <div id="prop_hover" class="property">
-               <div class="property_img position-relative">
-                  <figure>
-                     <img src="assets/images/100.jpeg" alt="Rumah Type 100"/>
-                     <div class="property_tag">
-                        <span class="tag_premium">PREMIUM</span>
-                     </div>
-                  </figure>
-               </div>
-               <div class="property_details">
-                  <h3>Cluster Magnolia - Type 100/200</h3>
-                  <div class="property_specs">
-                     <span><i class="fas fa-ruler-combined"></i> 100m² / 200m²</span>
-                     <span><i class="fas fa-bed"></i> 4 Kamar</span>
-                     <span><i class="fas fa-bath"></i> 4 Kamar Mandi</span>
-                  </div>
-                  <div class="property_price">
-                     <h4>Rp. 1.875.000.000</h4>
-                     <span class="promo">Cicilan Ringan 10th</span>
-                  </div>
-                  <a href="detail.php" class="btn btn-primary mt-3">Lihat Detail</a>
-               </div>
-            </div>
-         </div>
-      </div>
+        </div>
+    </div>
          </div>
       </div>
       <!-- end our_room -->

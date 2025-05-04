@@ -90,72 +90,70 @@ session_start();
       <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
-          <ul class="nav">
-            <li class="nav-item navbar-brand-mini-wrapper">
-              <a class="nav-link navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
-            </li>
-            <li class="nav-item nav-profile">
-              <a href="#" class="nav-link">
-                <div class="profile-image">
-                  <img class="img-xs rounded-circle" src="assets/images/faces/face8.jpg" alt="profile image">
-                  <div class="dot-indicator bg-success"></div>
-                </div>
-                <div class="text-wrapper">
-                  <p class="profile-name"><?= $_SESSION['nama_pelanggan'] ?></p>
-                  <p class="designation">Administrator</p>
-                </div>
-                <div class="icon-container">
-                  <i class="icon-bubbles"></i>
-                  <div class="dot-indicator bg-danger"></div>
-                </div>
-              </a>
-            </li>
-            <li class="nav-item nav-category">
-              <span class="nav-link">Dashboard</span>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="index.php">
-                <span class="menu-title">Dashboard</span>
-                <i class="icon-screen-desktop menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item nav-category"><span class="nav-link">Fitur</span></li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                <span class="menu-title">Properti</span>
-                <i class="icon-layers menu-icon"></i>
-              </a>
-              <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item"> <a class="nav-link" href="properti.php">Lihat Properti</a></li>
-                  <li class="nav-item"> <a class="nav-link" href="tambahproperti.php">Tambah Properti</a></li>
+                <ul class="nav">
+                    <li class="nav-item navbar-brand-mini-wrapper">
+                        <a class="nav-link navbar-brand brand-logo-mini" href="index.html"><img
+                                src="assets/images/logo-mini.svg" alt="logo" /></a>
+                    </li>
+                    <li class="nav-item nav-profile">
+                        <a href="#" class="nav-link">
+                            <div class="profile-image">
+                                <img class="img-xs rounded-circle" src="assets/images/faces/face8.jpg"
+                                    alt="profile image">
+                                <div class="dot-indicator bg-success"></div>
+                            </div>
+                            <div class="text-wrapper">
+                                <p class="profile-name"><?= $_SESSION['nama_pelanggan'] ?></p>
+                                <p class="designation">Pelanggan</p>
+                            </div>
+                            <div class="icon-container">
+                                <i class="icon-bubbles"></i>
+                                <div class="dot-indicator bg-danger"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item nav-category">
+                        <span class="nav-link">Dashboard</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="icon-screen-desktop menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item nav-category"><span class="nav-link">Fitur</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../properti.php">
+                            <span class="menu-title">Beli Properti</span>
+                            <i class="icon-screen-desktop menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false"
+                            aria-controls="forms">
+                            <span class="menu-title">Pemesanan</span>
+                            <i class="icon-book-open menu-icon"></i>
+                        </a>
+                        <div class="collapse" id="forms">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" href="pemesanan.php">Pemesanan</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false"
+                            aria-controls="charts">
+                            <span class="menu-title">Riwayat Pembayaran</span>
+                            <i class="icon-chart menu-icon"></i>
+                        </a>
+                        <div class="collapse" id="charts">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" href="riwayat.php">Riwayat</a></li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
-                <span class="menu-title">Pemesanan</span>
-                <i class="icon-book-open menu-icon"></i>
-              </a>
-              <div class="collapse" id="forms">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item"> <a class="nav-link" href="pemesanan.php">Data Pemesanan</a></li>
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-                <span class="menu-title">Riwayat Pembayaran</span>
-                <i class="icon-chart menu-icon"></i>
-              </a>
-              <div class="collapse" id="charts">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item"> <a class="nav-link" href="riwayat.php">Riwayat</a></li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </nav>
+            </nav>
         <!-- partial -->
 <div class="main-panel">
     <div class="content-wrapper">

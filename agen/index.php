@@ -12,11 +12,6 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != 'login') {
 }
 
 
-
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +20,7 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != 'login') {
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin</title>
+    <title>Agen</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendors/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="assets/vendors/flag-icon-css/css/flag-icons.min.css">
@@ -70,7 +65,7 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != 'login') {
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                 <div class="dropdown-header text-center">
                   <img class="img-md rounded-circle" src="assets/images/faces/face8.jpg" alt="Profile image">
-                  <p class="mb-1 mt-3"><?= $_SESSION['nama_admin'] ?></p>
+                  <p class="mb-1 mt-3"><?= $_SESSION['nama_agen'] ?></p>
                 </div>
                 <a class="dropdown-item" href="hapusSession.php"><i class="dropdown-item-icon icon-power text-primary"></i>Sign Out</a>
               </div>

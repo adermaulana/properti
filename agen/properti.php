@@ -4,6 +4,19 @@ include '../koneksi.php';
 
 session_start();
 
+$id_agen = $_SESSION['id_agen'];
+
+if(isset($_GET['hal']) == "hapus"){
+
+  $hapus = mysqli_query($koneksi, "DELETE FROM properti_222146 WHERE id_properti_222146 = '$_GET[id]'");
+
+  if($hapus){
+      echo "<script>
+      alert('Hapus data sukses!');
+      document.location='properti.php';
+      </script>";
+  }
+}
 
 ?>
 
@@ -13,7 +26,7 @@ session_start();
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin</title>
+    <title>Agen</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendors/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="assets/vendors/flag-icon-css/css/flag-icons.min.css">
@@ -31,6 +44,8 @@ session_start();
     <!-- Layout styles -->
     <link rel="stylesheet" href="assets/css/vertical-light-layout/style.css">
     <!-- End layout styles -->
+             <!-- lightbox -->
+             <link rel="stylesheet" href="../assets/lightbox/css/lightbox.min.css">
     <link rel="shortcut icon" href="assets/images/favicon.png" />
 
     <!-- datatable -->
@@ -155,70 +170,66 @@ session_start();
                   <div class="card-body">
                     <a class="btn btn-success mb-3" href="tambahproperti.php">Tambah Data</a>
                     <div class="table-responsive">
-                      <table class="table display" id="example" style="width:100%">
-                          <thead>
-                              <tr>
-                                  <th>No</th>
-                                  <th>Id Properti</th>
-                                  <th>Nama Properti</th>
-                                  <th>Harga</th>
-                                  <th>Luas Bangunan/Tanah</th>
-                                  <th>Kamar</th>
-                                  <th>Foto</th>
-                                  <th>Status</th>
-                                  <th>Aksi</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <!-- Property 1 - Pending Approval -->
-                              <tr>
-                                  <td>1</td>
-                                  <td>PR001</td>
-                                  <td>Cluster Dahlia - Type 36/72</td>
-                                  <td>Rp. 450.000.000</td>
-                                  <td>36m² / 72m²</td>
-                                  <td>2 KT, 1 KM</td>
-                                  <td><img src="assets/images/36.jpg" width="100" alt="Cluster Dahlia"></td>
-                                  <td><span class="badge badge-warning">Menunggu Konfirmasi</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Property 2 - Approved -->
-                              <tr>
-                                  <td>2</td>
-                                  <td>PR002</td>
-                                  <td>Cluster Mawar - Type 45/90</td>
-                                  <td>Rp. 550.000.000</td>
-                                  <td>45m² / 90m²</td>
-                                  <td>3 KT, 2 KM</td>
-                                  <td><img src="assets/images/45.jpg" width="100" alt="Cluster Mawar"></td>
-                                  <td><span class="badge badge-success">Disetujui</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                              
-                              <!-- Property 3 - Rejected -->
-                              <tr>
-                                  <td>3</td>
-                                  <td>PR003</td>
-                                  <td>Cluster Melati - Type 30/60</td>
-                                  <td>Rp. 380.000.000</td>
-                                  <td>30m² / 60m²</td>
-                                  <td>2 KT, 1 KM</td>
-                                  <td><img src="assets/images/30.jpg" width="100" alt="Cluster Melati"></td>
-                                  <td><span class="badge badge-danger">Ditolak</span></td>
-                                  <td>
-                                      <a class="badge badge-warning text-decoration-none" href="">Edit</a>
-                                      <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="">Hapus</a>
-                                  </td>
-                              </tr>
-                          </tbody>
-                      </table>
+                    <table class="table display" id="example" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Properti</th>
+                                <th>Agen</th>
+                                <th>Harga</th>
+                                <th>Luas Bangunan/Tanah</th>
+                                <th>Foto</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                            $no = 1;
+                            if(isset($_SESSION['id_agen'])) {
+                                $id_agen = $_SESSION['id_agen'];
+                                
+                                $query = mysqli_query($koneksi, "SELECT p.*, a.nama_agen_222146 
+                                                                FROM properti_222146 p 
+                                                                LEFT JOIN agen_222146 a ON p.id_agen_222146 = a.id_agen_222146 
+                                                                WHERE p.id_agen_222146 = '$id_agen'
+                                                                ORDER BY p.id_properti_222146 DESC");
+                                
+                                while($data = mysqli_fetch_array($query)):
+                                    // Determine the badge color based on status
+                                    $status_class = "";
+                                    if($data['status_222146'] == "Tersedia") {
+                                        $status_class = "badge-success";
+                                    } else if($data['status_222146'] == "Tidak Tersedia") {
+                                        $status_class = "badge-danger";
+                                    } else if($data['status_222146'] == "Menunggu Konfirmasi") {
+                                        $status_class = "badge-warning";
+                                    }
+                        ?>
+                            <tr>
+                                <td><?php echo $no++; ?></td>
+                                <td><?php echo $data['nama_properti_222146']; ?></td>
+                                <td><?php echo $data['nama_agen_222146']; ?></td>
+                                <td>Rp. <?php echo number_format($data['harga_222146'], 0, ',', '.'); ?></td>
+                                <td><?php echo $data['luas_bangunan_222146']; ?>m² / <?php echo $data['luas_tanah_222146']; ?>m²</td>
+                                <td>                                
+                                  <a href="../admin/uploads/<?= $data['foto_222146']; ?>" data-lightbox="foto-properti" data-title="Foto Properti">
+                                    <img src="../admin/uploads/<?= $data['foto_222146']; ?>" alt="Foto Properti" width="100" height="100">
+                                </a></td>
+                                <td><span class="badge <?php echo $status_class; ?>"><?php echo $data['status_222146']; ?></span></td>
+                                <td>
+                                    <!-- <a class="badge badge-warning text-decoration-none" href="editproperti.php?hal=edit&id=<?php echo $data['id_properti_222146']; ?>">Edit</a> -->
+                                    <a class="badge badge-danger text-decoration-none" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="properti.php?hal=hapus&id=<?php echo $data['id_properti_222146']; ?>">Hapus</a>
+                                </td>
+                            </tr>
+                        <?php
+                                endwhile;
+                            } else {
+                                echo "<tr><td colspan='8' class='text-center'>Anda harus login sebagai agen untuk melihat data properti</td></tr>";
+                            }
+                        ?>
+                        </tbody>
+                    </table>
                     </div>
                   </div>
                 </div>
@@ -269,5 +280,8 @@ session_start();
     <script>
         new DataTable('#example');
     </script>
+
+            <!-- lightbox -->
+            <script src="../assets/lightbox/js/lightbox-plus-jquery.js"></script>
   </body>
 </html>

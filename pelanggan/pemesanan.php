@@ -39,12 +39,7 @@ session_start();
 
 
     <style>
-.payment-proof {
-  max-height: 200px;
-  overflow: hidden;
-  border: 1px solid #ddd;
-  padding: 5px;
-}
+
 .badge {
   font-weight: normal;
 }
@@ -154,122 +149,178 @@ session_start();
         </nav>
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title"> Data Pemesanan</h3>
-            </div>
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table class="table display" id="example" style="width:100%">
-                        <thead>
-                          <tr>
-                            <th>No</th>
-                            <th>ID Transaksi</th>
-                            <th>Nama Properti</th>
-                            <th>Harga Properti</th>
-                            <th>Tanggal Transaksi</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <!-- Sample Transaction 1 - Pending -->
-                          <tr>
-                            <td>1</td>
-                            <td>TRX001_222146</td>
-                            <td>Cluster Dahlia - Type 36/72</td>
-                            <td>Rp. 450.000.000</td>
-                            <td>2023-06-15 10:30:45</td>
-                            <td><span class="badge bg-warning">Pending</span></td>
-                            <td>
-                              <button class="btn btn-sm bg-success" data-bs-toggle="modal" data-bs-target="#detailModal1">
-                                Detail
-                              </button>
-                            </td>
-                          </tr>
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title"> Data Pemesanan</h3>
+            <?php
+              if(isset($_SESSION['error'])) {
+                echo '<div class="alert alert-danger">'.$_SESSION['error'].'</div>';
+                unset($_SESSION['error']);
+              }
 
-                          <!-- Sample Transaction 2 - Confirmed -->
+              // Tampilkan pesan success jika ada
+              if(isset($_SESSION['success'])) {
+                echo '<div class="alert alert-success">'.$_SESSION['success'].'</div>';
+                unset($_SESSION['success']);
+              }
+              ?>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                  <table class="table display" id="example" style="width:100%">
+                      <thead>
+                        
                           <tr>
-                            <td>2</td>
-                            <td>TRX002_222146</td>
-                            <td>Cluster Mawar - Type 45/90</td>
-                            <td>Rp. 550.000.000</td>
-                            <td>2023-06-14 14:15:22</td>
-                            <td><span class="badge bg-success">Dikonfirmasi</span></td>
-                            <td>
-                              <button class="btn btn-sm bg-info" data-bs-toggle="modal" data-bs-target="#detailModal2">
-                                Detail
-                              </button>
-                            </td>
+                              <th>No</th>
+                              <th>ID Transaksi</th>
+                              <th>Nama Properti</th>
+                              <th>Harga Properti</th>
+                              <th>Tanggal Transaksi</th>
+                              <th>Status</th>
+                              <th>Aksi</th>
                           </tr>
+                      </thead>
+                      <tbody>
+                      <?php
+                      $no = 1;
 
-                          <!-- Sample Transaction 3 - Canceled -->
+                      
+                      // Query dasar
+                      $query = "SELECT t.*, pr.nama_properti_222146, pr.harga_222146 
+                                FROM transaksi_222146 t
+                                JOIN properti_222146 pr ON t.id_properti_222146 = pr.id_properti_222146";
+                      
+                      // Jika yang login adalah pelanggan, filter berdasarkan id_pengguna
+                      if(isset($_SESSION['id_pengguna'])) {
+                          $id_pengguna = $_SESSION['id_pengguna'];
+                          $query .= " WHERE t.id_pengguna_222146 = '$id_pengguna'";
+                      }
+                      
+                      $query .= " ORDER BY t.tanggal_transaksi_222146 DESC";
+                      
+                      $result = mysqli_query($koneksi, $query);
+                      
+                      if(mysqli_num_rows($result) > 0) {
+                          while($row = mysqli_fetch_array($result)){
+                              // Determine badge color based on status
+                              $badge_color = '';
+                              if($row['status_222146'] == 'pending') $badge_color = 'bg-warning';
+                              elseif($row['status_222146'] == 'dikonfirmasi') $badge_color = 'bg-success';
+                              elseif($row['status_222146'] == 'batal') $badge_color = 'bg-danger';
+                              
+                              // Format price
+                              $harga = 'Rp. ' . number_format($row['harga_222146'], 0, ',', '.');
+                      ?>
                           <tr>
-                            <td>3</td>
-                            <td>TRX003_222146</td>
-                            <td>Cluster Melati - Type 30/60</td>
-                            <td>Rp. 380.000.000</td>
-                            <td>2023-06-13 09:45:10</td>
-                            <td><span class="badge bg-danger">Batal</span></td>
-                            <td>
-                              <button class="btn btn-sm bg-warning" data-bs-toggle="modal" data-bs-target="#detailModal3">
-                                Detail
-                              </button>
-                            </td>
+                              <td><?= $no++ ?></td>
+                              <td><?= $row['id_transaksi_222146'] ?></td>
+                              <td><?= $row['nama_properti_222146'] ?></td>
+                              <td><?= $harga ?></td>
+                              <td><?= $row['tanggal_transaksi_222146'] ?></td>
+                              <td><span class="badge <?= $badge_color ?>"><?= $row['status_222146'] ?></span></td>
+                              <td>
+                                  <button class="btn btn-sm bg-info" data-bs-toggle="modal" data-bs-target="#detailModal<?= $row['id_transaksi_222146'] ?>">
+                                      Detail
+                                  </button>
+                                  <?php if($row['status_222146'] == 'pending') { ?>
+                                  <a href="?hal=batal&id=<?= $row['id_transaksi_222146'] ?>" class="btn btn-sm bg-danger" onclick="return confirm('Yakin ingin membatalkan transaksi ini?')">
+                                      Batalkan
+                                  </a>
+                                  <?php } ?>
+                              </td>
                           </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <!-- Detail Modal -->
-                    <div class="modal fade" id="detailModal1" tabindex="-1" aria-hidden="true">
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title">Detail Transaksi TRX001_222146</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <div class="row">
-                              <div class="col-md-6">
-                                <h6>Data Properti</h6>
-                                <p><strong>ID Properti:</strong> PROP001_222146<br>
-                                <strong>Nama:</strong> Cluster Dahlia - Type 36/72<br>
-                                <strong>Harga:</strong> Rp. 450.000.000</p>
+                          
+                          <!-- Detail Modal for each transaction -->
+                          <div class="modal fade" id="detailModal<?= $row['id_transaksi_222146'] ?>" tabindex="-1" aria-hidden="true">
+                              <div class="modal-dialog modal-lg">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title">Detail Transaksi <?= $row['id_transaksi_222146'] ?></h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <?php
+                                          // Get payment details if exists
+                                          $payment_query = "SELECT * FROM pembayaran_222146 WHERE id_transaksi_222146 = '".$row['id_transaksi_222146']."'";
+                                          $payment_result = mysqli_query($koneksi, $payment_query);
+                                          $payment_data = mysqli_fetch_array($payment_result);
+                                          
+                                          // Get property details
+                                          $property_query = "SELECT pr.*, a.nama_agen_222146 
+                                                          FROM properti_222146 pr
+                                                          LEFT JOIN agen_222146 a ON pr.id_agen_222146 = a.id_agen_222146
+                                                          WHERE pr.id_properti_222146 = '".$row['id_properti_222146']."'";
+                                          $property_result = mysqli_query($koneksi, $property_query);
+                                          $property_data = mysqli_fetch_array($property_result);
+                                          ?>
+                                          
+                                          <div class="row">
+                                              <div class="col-md-6">
+                                                  <h6>Data Properti</h6>
+                                                  <p><strong>ID Properti:</strong> <?= $property_data['id_properti_222146'] ?><br>
+                                                  <strong>Nama:</strong> <?= $property_data['nama_properti_222146'] ?><br>
+                                                  <strong>Harga:</strong> <?= $harga ?><br>
+                                                  <strong>Lokasi:</strong> <?= $property_data['lokasi_222146'] ?><br>
+                                                  <strong>Agen:</strong> <?= $property_data['nama_agen_222146'] ?><br>
+                                                  <strong>Kontak Agen:</strong> <?= $property_data['nomor_telepon_222146'] ?></p>
+                                              </div>
+                                              <div class="col-md-6">
+                                                  <h6>Detail Transaksi</h6>
+                                                  <p><strong>Tanggal:</strong> <?= $row['tanggal_transaksi_222146'] ?><br>
+                                                  <strong>Status:</strong> <span class="badge <?= $badge_color ?>"><?= $row['status_222146'] ?></span></p>
+                                                  
+                                                  <?php if($payment_data) { ?>
+                                                  <h6 class="mt-3">Detail Pembayaran</h6>
+                                                  <p><strong>Jumlah:</strong> Rp. <?= number_format($payment_data['jumlah_222146'], 0, ',', '.') ?><br>
+                                                  <strong>Tanggal Pembayaran:</strong> <?= $payment_data['tanggal_pembayaran_222146'] ?></p>
+                                                  <?php } ?>
+                                              </div>
+                                          </div>
+                                          <div class="row mt-3">
+                                              <div class="col-md-12">
+                                                  <?php if($payment_data && !empty($payment_data['bukti_pembayaran_222146'])) { ?>
+                                                  <h6>Bukti Pembayaran</h6>
+                                                  <div class="payment-proof">
+                                                      <img src="../pelanggan/bukti_pembayaran/<?= $payment_data['bukti_pembayaran_222146'] ?>" class="img-fluid" alt="Bukti Pembayaran">
+                                                  </div>
+                                                  <?php } elseif($row['status_222146'] == 'pending') { ?>
+                                                  <div class="alert alert-info">
+                                                      <p>Silakan lakukan pembayaran dan upload bukti pembayaran</p>
+                                                      <form action="upload_bukti.php" method="post" enctype="multipart/form-data">
+                                                          <input type="hidden" name="id_transaksi" value="<?= $row['id_transaksi_222146'] ?>">
+                                                          <div class="mb-3">
+                                                              <input type="file" class="form-control" name="bukti_pembayaran" required>
+                                                          </div>
+                                                          <button type="submit" class="btn btn-primary">Upload Bukti</button>
+                                                      </form>
+                                                  </div>
+                                                  <?php } ?>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                      </div>
+                                  </div>
                               </div>
-                              <div class="col-md-6">
-                                <h6>Detail Transaksi</h6>
-                                <p><strong>Tanggal:</strong> 2023-06-15 10:30:45<br>
-                                <strong>Status:</strong> <span class="badge bg-warning">Pending</span><br>
-                                <strong>Metode Pembayaran:</strong> Transfer Bank</p>
-                              </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                              <div class="col-md-6">
-                                <h6>Bukti Pembayaran</h6>
-                                <div class="payment-proof">
-                                  <img src="assets/images/payment-proof.jpg" class="img-fluid" alt="Bukti Pembayaran">
-                                </div>
-                              </div>
-                            </div>
                           </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="button" class="btn btn-success">Konfirmasi</button>
-                            <button type="button" class="btn btn-danger">Tolak</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      <?php
+                          }
+                      } else {
+                          echo '<tr><td colspan="7" class="text-center">Tidak ada data transaksi</td></tr>';
+                      }
+                      ?>
+                      </tbody>
+                  </table>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
           <footer class="footer">

@@ -310,7 +310,7 @@ session_start();
                       <?php
                           }
                       } else {
-                          echo '<tr><td colspan="7" class="text-center">Tidak ada data transaksi</td></tr>';
+                          
                       }
                       ?>
                       </tbody>

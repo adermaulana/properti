@@ -214,7 +214,7 @@ if(isset($_GET['hal']) == "hapus"){
               <div class="card">
                 <div class="card-body">
                   <div class="table-responsive">
-<table class="table display" id="example" style="width:100%">
+            <table class="table display" id="example" style="width:100%">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -365,7 +365,7 @@ if(isset($_GET['hal']) == "hapus"){
                         <?php
                             }
                         } else {
-                            echo "<tr><td colspan='8' class='text-center'>Tidak ada data transaksi</td></tr>";
+
                         }
                         ?>
                         </tbody>

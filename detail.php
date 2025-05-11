@@ -416,7 +416,7 @@ if (isset($_SESSION['username_admin'])) {
                         <h2><?php echo $properti['nama_properti_222146']; ?></h2>
                         <div class="property_price_detail">
                             <h3>Rp. <?php echo number_format($properti['harga_222146'], 0, ',', '.'); ?></h3>
-                            <span class="promo">Dp Mulai 5%</span>
+                            <span class="promo">Dp Mulai 10%</span>
                         </div>
                         <div class="property_specs_detail mt-4">
                             <div class="spec_item">
@@ -428,15 +428,141 @@ if (isset($_SESSION['username_admin'])) {
                             </div>
                             <!-- Item spesifikasi lainnya -->
                         </div>
+
                         <div class="contact_buttons mt-4">
                             <?php if($isLoggedIn && isset($_SESSION['username_pelanggan'])): ?>
-                                <form method="post" action="proses_pemesanan.php">
-                                    <input type="hidden" name="id_properti" value="<?php echo $properti['id_properti_222146']; ?>">
-                                    <input type="hidden" name="harga_properti" value="<?php echo $properti['harga_222146']; ?>">
-                                    <button type="submit" name="beli" class="btn btn-primary btn-block">
-                                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
-                                    </button>
-                                </form>
+                                <!-- Modal Trigger -->
+                                <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                                    <i class="fas fa-shopping-cart"></i> Beli Properti
+                                </button>
+                                
+                                <!-- Payment Method Modal -->
+                                <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentModalLabel">Pilih Metode Pembayaran</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="proses_pemesanan.php" id="paymentForm">
+                                                    <input type="hidden" name="id_properti" value="<?php echo $properti['id_properti_222146']; ?>">
+                                                    <input type="hidden" name="harga_properti" value="<?php echo $properti['harga_222146']; ?>">
+                                                    
+                                                    <div class="mb-3">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="payment_method" id="fullPayment" value="full" checked>
+                                                            <label class="form-check-label" for="fullPayment">
+                                                                <strong>Pembayaran Penuh</strong><br>
+                                                                <small>Bayar seluruh harga properti sekaligus</small>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="payment_method" id="installmentPayment" value="installment">
+                                                            <label class="form-check-label" for="installmentPayment">
+                                                                <strong>Pembayaran Cicilan</strong><br>
+                                                                <small>Bayar dengan sistem cicilan</small>
+                                                            </label>
+                                                        </div>
+                                                        
+                                                        <div id="installmentOptions" style="display: none; margin-top: 15px; padding-left: 20px;">
+                                                            <div class="mb-3">
+                                                                <label for="dp_percentage" class="form-label">Uang Muka (DP)</label>
+                                                                <select class="form-select" id="dp_percentage" name="dp_percentage">
+                                                                    <option value="10">10%</option>
+                                                                    <option value="20">20%</option>
+                                                                    <option value="30" selected>30%</option>
+                                                                    <option value="40">40%</option>
+                                                                    <option value="50">50%</option>
+                                                                </select>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3">
+                                                                <label for="jumlah_cicilan" class="form-label">Jumlah Cicilan</label>
+                                                                <select class="form-select" id="jumlah_cicilan" name="jumlah_cicilan">
+                                                                    <option value="3">3 Bulan</option>
+                                                                    <option value="6" selected>6 Bulan</option>
+                                                                    <option value="12">12 Bulan</option>
+                                                                    <option value="24">24 Bulan</option>
+                                                                </select>
+                                                            </div>
+                                                            
+                                                            <div class="alert alert-info">
+                                                                <h6>Perkiraan Cicilan:</h6>
+                                                                <p id="installmentCalculation">
+                                                                    DP: <span id="dpAmount">0</span><br>
+                                                                    Cicilan: <span id="installmentAmount">0</span>/bulan
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="d-grid gap-2">
+                                                        <button type="submit" name="proses_pembayaran" class="btn btn-primary">Lanjutkan Pembayaran</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <script>
+                                    // Tampilkan opsi cicilan ketika dipilih
+                                    document.getElementById('installmentPayment').addEventListener('change', function() {
+                                        document.getElementById('installmentOptions').style.display = 'block';
+                                        calculateInstallment();
+                                    });
+                                    
+                                    document.getElementById('fullPayment').addEventListener('change', function() {
+                                        document.getElementById('installmentOptions').style.display = 'none';
+                                    });
+                                    
+                                    // Form submission handler
+                                    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                                        // Add the correct button based on payment method
+                                        var paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+                                        
+                                        if (paymentMethod == 'full') {
+                                            // Add beli button for full payment
+                                            var inputElement = document.createElement('input');
+                                            inputElement.type = 'hidden';
+                                            inputElement.name = 'beli';
+                                            inputElement.value = '1';
+                                            this.appendChild(inputElement);
+                                        } else if (paymentMethod == 'installment') {
+                                            // Add beli_cicil button for installment
+                                            var inputElement = document.createElement('input');
+                                            inputElement.type = 'hidden';
+                                            inputElement.name = 'beli_cicil';
+                                            inputElement.value = '1';
+                                            this.appendChild(inputElement);
+                                        }
+                                    });
+                                    
+                                    // Hitung cicilan
+                                    function calculateInstallment() {
+                                        const harga = <?php echo $properti['harga_222146']; ?>;
+                                        const dpPercentage = parseInt(document.getElementById('dp_percentage').value);
+                                        const jumlahCicilan = parseInt(document.getElementById('jumlah_cicilan').value);
+                                        
+                                        const dpAmount = (dpPercentage / 100) * harga;
+                                        const installmentAmount = (harga - dpAmount) / jumlahCicilan;
+                                        
+                                        document.getElementById('dpAmount').textContent = 'Rp ' + dpAmount.toLocaleString('id-ID');
+                                        document.getElementById('installmentAmount').textContent = 'Rp ' + installmentAmount.toLocaleString('id-ID');
+                                    }
+                                    
+                                    // Hitung saat perubahan input
+                                    document.getElementById('dp_percentage').addEventListener('change', calculateInstallment);
+                                    document.getElementById('jumlah_cicilan').addEventListener('change', calculateInstallment);
+                                    
+                                    // Hitung awal
+                                    calculateInstallment();
+                                </script>
+
                             <?php else: ?>
                                 <a href="login.php" class="btn btn-primary btn-block">
                                     <i class="fas fa-shopping-cart"></i> Login untuk Membeli
@@ -540,6 +666,8 @@ if (isset($_SESSION['username_admin'])) {
     <!-- sidebar -->
     <script src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="assets/js/custom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

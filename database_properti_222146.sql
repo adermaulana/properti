@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2025 at 10:11 PM
+-- Generation Time: May 12, 2025 at 01:45 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -69,6 +69,39 @@ INSERT INTO `agen_222146` (`id_agen_222146`, `nama_agen_222146`, `username_22214
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cicilan_222146`
+--
+
+CREATE TABLE `cicilan_222146` (
+  `id_cicilan_222146` int(11) NOT NULL,
+  `id_transaksi_222146` int(11) NOT NULL,
+  `jumlah_cicilan_222146` int(11) NOT NULL,
+  `nilai_cicilan_222146` decimal(15,2) NOT NULL,
+  `interval_cicilan_222146` int(11) NOT NULL COMMENT 'Dalam hari',
+  `status_222146` varchar(20) DEFAULT 'pending',
+  `created_at_222146` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail_cicilan_222146`
+--
+
+CREATE TABLE `detail_cicilan_222146` (
+  `id_detail_cicilan_222146` int(11) NOT NULL,
+  `id_cicilan_222146` int(11) NOT NULL,
+  `angsuran_ke_222146` int(11) NOT NULL,
+  `jumlah_222146` decimal(15,2) NOT NULL,
+  `tanggal_jatuh_tempo_222146` date NOT NULL,
+  `status_222146` varchar(20) DEFAULT 'pending',
+  `bukti_pembayaran_222146` varchar(255) DEFAULT NULL,
+  `tanggal_pembayaran_222146` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `pembayaran_222146`
 --
 
@@ -101,7 +134,10 @@ CREATE TABLE `pengguna_222146` (
 --
 
 INSERT INTO `pengguna_222146` (`id_pengguna_222146`, `nama_222146`, `no_hp_222146`, `alamat_222146`, `username_222146`, `password_222146`, `created_at_222146`) VALUES
-(6, 'tes', '0854', 'tes', 'tes', '28b662d883b6d76fd96e4ddc5e9ba780', '2025-04-27 12:32:41');
+(6, 'tes', '0854', 'tes', 'tes', '28b662d883b6d76fd96e4ddc5e9ba780', '2025-04-27 12:32:41'),
+(10, 'hoho', '3003', 'hoho', 'hoho', '$2y$10$QrJlIM1/L4mnMZsDLfBRduBv/asXc/zrBNEism/eBLA9uaMjNeRmW', '2025-05-04 21:51:03'),
+(11, 'hoho', '3434', 'ohoh', 'hohoo', '74d181ce69fa53e60fb588719cc404e1', '2025-05-04 21:51:40'),
+(12, 'udin', '54354', 'udin', 'udin', '6bec9c852847242e384a4d5ac0962ba0', '2025-05-06 15:16:16');
 
 -- --------------------------------------------------------
 
@@ -124,6 +160,22 @@ CREATE TABLE `properti_222146` (
   `nomor_telepon_222146` varchar(50) NOT NULL,
   `status_222146` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `properti_222146`
+--
+
+INSERT INTO `properti_222146` (`id_properti_222146`, `nama_properti_222146`, `lokasi_222146`, `harga_222146`, `id_agen_222146`, `luas_bangunan_222146`, `luas_tanah_222146`, `kamar_tidur_222146`, `kamar_mandi_222146`, `foto_222146`, `deskripsi_222146`, `nomor_telepon_222146`, `status_222146`) VALUES
+(4, 'Cluster Anggrek - Type 45/90', 'Jl. Perintis', 350000000.00, 4, '45', '90', '3', '2', '1205202501353336.jpg', 'Rumah asri dengan taman belakang', '081234567891', 'Tersedia'),
+(5, 'Cluster Mawar - Type 36/72', 'Jl. Perintis', 280000000.00, 4, '36', '72', '2', '1', '1205202501363045.jpg', 'Lokasi strategis, 5 menit ke tol', '082112345678', 'Tersedia'),
+(6, 'Cluster Melati - Type 60/100', 'Jl. Perintis', 470000000.00, 4, '60', '100', '3', '2', '1205202501372454.jpg', 'Rumah hook dengan akses dua jalan', '081345678902', 'Tersedia'),
+(7, 'Cluster Teratai - Type 40/84', 'Jl. Perintis', 320000000.00, 4, '40', '84', '2', '1', '1205202501383460.jpg', 'Cocok untuk keluarga kecil', '083245671122', 'Tersedia'),
+(8, 'Cluster Cempaka - Type 75/120', 'Jl. Perintis', 580000000.00, 4, '75', '120', '4', '2', '1205202501394075.jpeg', 'Dilengkapi garasi & taman depan', '082176543210', 'Tersedia'),
+(9, 'Cluster Flamboyan - Type 50/96', 'Jl. Perintis', 390000000.00, 4, '50', '96', '3', '2', '12052025014039100.jpeg', 'Dilengkapi kitchen set dan pagar', '083122334455', 'Tersedia'),
+(10, 'Cluster Lavender - Type 45/84', 'Jl. Perintis', 350000000.00, 4, '45', '84', '3', '1', '12052025014132properti3.jpeg', 'Lokasi elite dan tenang', '082156789034', 'Tersedia'),
+(11, 'Cluster Seruni - Type 30/60', 'Jl. Perintis', 240000000.00, 4, '30', '60', '1', '1', '1205202501431736.jpg', 'Rumah murah dengan fasilitas umum lengkap', '081212345670', 'Tersedia'),
+(12, 'Cluster Bougenville - Type 65/120', 'Jl. Perintis', 530000000.00, 4, '65', '120', '4', '2', '12052025014402properti2.jpg', 'Bonus pagar keliling dan toren air', '081334567891', 'Tersedia'),
+(13, 'Cluster Alamanda - Type 50/90', 'Jl. Perintis', 410000000.00, 4, '50', '90', '3', '2', '12052025014440properti3.jpeg', 'Siap huni, lingkungan bersih dan aman', '083212345678', 'Tersedia');
 
 -- --------------------------------------------------------
 
@@ -151,7 +203,8 @@ CREATE TABLE `transaksi_222146` (
   `id_pengguna_222146` int(11) DEFAULT NULL,
   `id_properti_222146` int(11) DEFAULT NULL,
   `status_222146` enum('pending','dikonfirmasi','batal') DEFAULT 'pending',
-  `tanggal_transaksi_222146` timestamp NOT NULL DEFAULT current_timestamp()
+  `tanggal_transaksi_222146` timestamp NOT NULL DEFAULT current_timestamp(),
+  `metode_pembayaran_222146` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -171,6 +224,20 @@ ALTER TABLE `admin_222146`
 --
 ALTER TABLE `agen_222146`
   ADD PRIMARY KEY (`id_agen_222146`);
+
+--
+-- Indexes for table `cicilan_222146`
+--
+ALTER TABLE `cicilan_222146`
+  ADD PRIMARY KEY (`id_cicilan_222146`),
+  ADD KEY `cicilan_222146_ibfk_1` (`id_transaksi_222146`);
+
+--
+-- Indexes for table `detail_cicilan_222146`
+--
+ALTER TABLE `detail_cicilan_222146`
+  ADD PRIMARY KEY (`id_detail_cicilan_222146`),
+  ADD KEY `detail_cicilan_222146_ibfk_1` (`id_cicilan_222146`);
 
 --
 -- Indexes for table `pembayaran_222146`
@@ -226,22 +293,34 @@ ALTER TABLE `agen_222146`
   MODIFY `id_agen_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `cicilan_222146`
+--
+ALTER TABLE `cicilan_222146`
+  MODIFY `id_cicilan_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `detail_cicilan_222146`
+--
+ALTER TABLE `detail_cicilan_222146`
+  MODIFY `id_detail_cicilan_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+
+--
 -- AUTO_INCREMENT for table `pembayaran_222146`
 --
 ALTER TABLE `pembayaran_222146`
-  MODIFY `id_pembayaran_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_pembayaran_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `pengguna_222146`
 --
 ALTER TABLE `pengguna_222146`
-  MODIFY `id_pengguna_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pengguna_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `properti_222146`
 --
 ALTER TABLE `properti_222146`
-  MODIFY `id_properti_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_properti_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `rating_222146`
@@ -253,11 +332,23 @@ ALTER TABLE `rating_222146`
 -- AUTO_INCREMENT for table `transaksi_222146`
 --
 ALTER TABLE `transaksi_222146`
-  MODIFY `id_transaksi_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_transaksi_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `cicilan_222146`
+--
+ALTER TABLE `cicilan_222146`
+  ADD CONSTRAINT `cicilan_222146_ibfk_1` FOREIGN KEY (`id_transaksi_222146`) REFERENCES `transaksi_222146` (`id_transaksi_222146`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `detail_cicilan_222146`
+--
+ALTER TABLE `detail_cicilan_222146`
+  ADD CONSTRAINT `detail_cicilan_222146_ibfk_1` FOREIGN KEY (`id_cicilan_222146`) REFERENCES `cicilan_222146` (`id_cicilan_222146`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pembayaran_222146`

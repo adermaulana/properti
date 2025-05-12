@@ -270,6 +270,8 @@ $detail_cicilan_result = mysqli_query($koneksi, $detail_cicilan_query);
                                         $badge_color = 'bg-warning'; // Kuning untuk status pending
                                     } elseif($transaction['status_222146'] == 'dikonfirmasi') {
                                         $badge_color = 'bg-success'; // Hijau untuk status dikonfirmasi
+                                    } elseif($transaction['status_222146'] == 'lunas') {
+                                        $badge_color = 'bg-success'; // Hijau untuk status dikonfirmasi
                                     } elseif($transaction['status_222146'] == 'batal') {
                                         $badge_color = 'bg-danger'; // Merah untuk status batal
                                     } else {

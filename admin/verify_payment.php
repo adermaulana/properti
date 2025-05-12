@@ -25,26 +25,30 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_detail_cicilan'])) {
                     WHERE id_detail_cicilan_222146 = '$id_detail_cicilan'";
     
     if(mysqli_query($koneksi, $update_query)) {
-        // Check if all installments are now verified
-        $check_all_paid = "SELECT COUNT(*) as unpaid 
-                          FROM detail_cicilan_222146 
-                          WHERE id_cicilan_222146 = (
-                              SELECT id_cicilan_222146 FROM detail_cicilan_222146 
-                              WHERE id_detail_cicilan_222146 = '$id_detail_cicilan'
-                          )
-                          AND status_222146 != 'lunas'";
-        $paid_result = mysqli_query($koneksi, $check_all_paid);
-        $paid_data = mysqli_fetch_assoc($paid_result);
+        // Get the installment plan details
+        $cicilan_query = "SELECT c.jumlah_cicilan_222146, 
+                         (SELECT COUNT(*) FROM detail_cicilan_222146 
+                          WHERE id_cicilan_222146 = c.id_cicilan_222146 
+                          AND status_222146 = 'lunas') as paid_count
+                         FROM cicilan_222146 c
+                         JOIN detail_cicilan_222146 dc ON c.id_cicilan_222146 = dc.id_cicilan_222146
+                         WHERE dc.id_detail_cicilan_222146 = '$id_detail_cicilan'";
+        $cicilan_result = mysqli_query($koneksi, $cicilan_query);
+        $cicilan_data = mysqli_fetch_assoc($cicilan_result);
         
-        if($paid_data['unpaid'] == 0) {
-            // Update transaction status if all installments are paid
+        // Check if all installments are paid
+        if($cicilan_data['paid_count'] == $cicilan_data['jumlah_cicilan_222146']) {
+            // Update transaction status to 'lunas' if all installments are paid
             $update_transaksi = "UPDATE transaksi_222146 
-                               SET status_222146 = 'dikonfirmasi'
+                               SET status_222146 = 'lunas'
                                WHERE id_transaksi_222146 = '$id_transaksi'";
             mysqli_query($koneksi, $update_transaksi);
+            
+            $_SESSION['success'] = "Pembayaran angsuran berhasil diverifikasi dan semua cicilan telah lunas";
+        } else {
+            $_SESSION['success'] = "Pembayaran angsuran berhasil diverifikasi";
         }
         
-        $_SESSION['success'] = "Pembayaran angsuran berhasil diverifikasi";
         header("Location: detail_cicilan.php?id_transaksi=$id_transaksi");
         exit();
     } else {

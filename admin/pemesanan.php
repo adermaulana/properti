@@ -251,6 +251,7 @@ if(isset($_GET['hal']) == "hapus"){
                                 $badge_color = '';
                                 if($row['status_222146'] == 'pending') $badge_color = 'bg-warning';
                                 elseif($row['status_222146'] == 'dikonfirmasi') $badge_color = 'bg-success';
+                                elseif($row['status_222146'] == 'lunas') $badge_color = 'bg-success';
                                 elseif($row['status_222146'] == 'batal') $badge_color = 'bg-danger';
                                 
                                 // Format price

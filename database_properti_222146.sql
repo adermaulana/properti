@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2025 at 01:45 AM
+-- Generation Time: May 12, 2025 at 02:03 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -82,6 +82,13 @@ CREATE TABLE `cicilan_222146` (
   `created_at_222146` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cicilan_222146`
+--
+
+INSERT INTO `cicilan_222146` (`id_cicilan_222146`, `id_transaksi_222146`, `jumlah_cicilan_222146`, `nilai_cicilan_222146`, `interval_cicilan_222146`, `status_222146`, `created_at_222146`) VALUES
+(6, 30, 6, 70500000.00, 30, 'pending', '2025-05-11 23:52:28');
+
 -- --------------------------------------------------------
 
 --
@@ -99,6 +106,18 @@ CREATE TABLE `detail_cicilan_222146` (
   `tanggal_pembayaran_222146` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `detail_cicilan_222146`
+--
+
+INSERT INTO `detail_cicilan_222146` (`id_detail_cicilan_222146`, `id_cicilan_222146`, `angsuran_ke_222146`, `jumlah_222146`, `tanggal_jatuh_tempo_222146`, `status_222146`, `bukti_pembayaran_222146`, `tanggal_pembayaran_222146`) VALUES
+(82, 6, 1, 70500000.00, '2025-06-11', 'lunas', 'cicilan_1747007975_36.jpg', '2025-05-12 07:59:35'),
+(83, 6, 2, 70500000.00, '2025-07-11', 'lunas', 'cicilan_1747007980_60.jpg', '2025-05-12 07:59:40'),
+(84, 6, 3, 70500000.00, '2025-08-10', 'lunas', 'cicilan_1747007984_properti.jpg', '2025-05-12 07:59:44'),
+(85, 6, 4, 70500000.00, '2025-09-09', 'lunas', 'cicilan_1747007989_properti2.jpg', '2025-05-12 07:59:49'),
+(86, 6, 5, 70500000.00, '2025-10-09', 'lunas', 'cicilan_1747007993_properti3.jpeg', '2025-05-12 07:59:53'),
+(87, 6, 6, 70500000.00, '2025-11-08', 'lunas', 'cicilan_1747007998_properti3.jpeg', '2025-05-12 07:59:58');
+
 -- --------------------------------------------------------
 
 --
@@ -112,6 +131,13 @@ CREATE TABLE `pembayaran_222146` (
   `bukti_pembayaran_222146` varchar(255) DEFAULT NULL,
   `tanggal_pembayaran_222146` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pembayaran_222146`
+--
+
+INSERT INTO `pembayaran_222146` (`id_pembayaran_222146`, `id_transaksi_222146`, `jumlah_222146`, `bukti_pembayaran_222146`, `tanggal_pembayaran_222146`) VALUES
+(12, 30, 470000000.00, 'bukti_30_60.jpg', '2025-05-11 23:52:31');
 
 -- --------------------------------------------------------
 
@@ -202,10 +228,17 @@ CREATE TABLE `transaksi_222146` (
   `id_transaksi_222146` int(11) NOT NULL,
   `id_pengguna_222146` int(11) DEFAULT NULL,
   `id_properti_222146` int(11) DEFAULT NULL,
-  `status_222146` enum('pending','dikonfirmasi','batal') DEFAULT 'pending',
+  `status_222146` enum('pending','dikonfirmasi','batal','lunas') DEFAULT 'pending',
   `tanggal_transaksi_222146` timestamp NOT NULL DEFAULT current_timestamp(),
   `metode_pembayaran_222146` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transaksi_222146`
+--
+
+INSERT INTO `transaksi_222146` (`id_transaksi_222146`, `id_pengguna_222146`, `id_properti_222146`, `status_222146`, `tanggal_transaksi_222146`, `metode_pembayaran_222146`) VALUES
+(30, 6, 6, 'lunas', '2025-05-11 23:52:28', 'cicilan');
 
 --
 -- Indexes for dumped tables
@@ -296,19 +329,19 @@ ALTER TABLE `agen_222146`
 -- AUTO_INCREMENT for table `cicilan_222146`
 --
 ALTER TABLE `cicilan_222146`
-  MODIFY `id_cicilan_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_cicilan_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `detail_cicilan_222146`
 --
 ALTER TABLE `detail_cicilan_222146`
-  MODIFY `id_detail_cicilan_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `id_detail_cicilan_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `pembayaran_222146`
 --
 ALTER TABLE `pembayaran_222146`
-  MODIFY `id_pembayaran_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_pembayaran_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `pengguna_222146`
@@ -332,7 +365,7 @@ ALTER TABLE `rating_222146`
 -- AUTO_INCREMENT for table `transaksi_222146`
 --
 ALTER TABLE `transaksi_222146`
-  MODIFY `id_transaksi_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_transaksi_222146` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables

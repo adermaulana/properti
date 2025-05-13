@@ -38,9 +38,10 @@ if(!$transaksi) {
 // Hitung jumlah yang harus dibayar
 if($transaksi['metode_pembayaran_222146'] == 'cicilan' && $payment_type == 'dp') {
     // Pembayaran DP untuk cicilan
-    $jumlah_bayar = 0.3 * $transaksi['harga_222146']; // 30% DP
+    $dp_percentage = $transaksi['dp_percentage_222146'];
+    $jumlah_bayar = ($dp_percentage / 100) * $transaksi['harga_222146'];
     $payment_title = "Pembayaran Uang Muka (DP)";
-    $payment_description = "Silakan lakukan pembayaran uang muka sebesar 30% dari harga properti untuk memulai proses cicilan.";
+    $payment_description = "Silakan lakukan pembayaran uang muka sebesar $dp_percentage% dari harga properti untuk memulai proses cicilan.";
 } elseif($transaksi['metode_pembayaran_222146'] == 'cicilan' && $payment_type == 'installment') {
     // Pembayaran cicilan
     $angsuran_ke = isset($_GET['angsuran_ke']) ? $_GET['angsuran_ke'] : null;
@@ -158,10 +159,10 @@ if($transaksi['metode_pembayaran_222146'] == 'cicilan' && $payment_type == 'dp')
                                     <p><strong>Metode Pembayaran:</strong> 
                                         <?= $transaksi['metode_pembayaran_222146'] == 'cicilan' ? 'Cicilan' : 'Lunas' ?>
                                     </p>
-                                    <?php if($transaksi['metode_pembayaran_222146'] == 'cicilan'): ?>
-                                        <p><strong>Jumlah Cicilan:</strong> <?= $transaksi['jumlah_cicilan_222146'] ?>x</p>
-                                        <p><strong>Nilai Cicilan:</strong> Rp <?= number_format($transaksi['nilai_cicilan_222146'], 0, ',', '.') ?>/bulan</p>
-                                    <?php endif; ?>
+                                        <?php if($transaksi['metode_pembayaran_222146'] == 'cicilan'): ?>
+                                            <p><strong>Persentase DP:</strong> <?= $transaksi['dp_percentage_222146'] ?>%</p>
+                                            <p><strong>Jumlah DP:</strong> Rp <?= number_format(($transaksi['dp_percentage_222146']/100)*$transaksi['harga_222146'], 0, ',', '.') ?></p>
+                                        <?php endif; ?>
                                     <p><strong>Status:</strong> <span class="badge bg-warning text-dark"><?= ucfirst($transaksi['status_222146']) ?></span></p>
                                     <p><strong>Tanggal Transaksi:</strong> <?= date('d/m/Y H:i', strtotime($transaksi['tanggal_transaksi_222146'])) ?></p>
                                 </div>

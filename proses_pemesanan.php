@@ -63,19 +63,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         try {
             // Insert ke tabel transaksi
-            $query_transaksi = "INSERT INTO transaksi_222146 (
-                                id_pengguna_222146,
-                                id_properti_222146,
-                                tanggal_transaksi_222146,
-                                status_222146,
-                                metode_pembayaran_222146
-                              ) VALUES (
-                                '$id_pelanggan',
-                                '$id_properti',
-                                NOW(),
-                                'pending',
-                                'cicilan'
-                              )";
+              $query_transaksi = "INSERT INTO transaksi_222146 (
+                                  id_pengguna_222146,
+                                  id_properti_222146,
+                                  tanggal_transaksi_222146,
+                                  status_222146,
+                                  metode_pembayaran_222146,
+                                  dp_percentage_222146
+                                ) VALUES (
+                                  '$id_pelanggan',
+                                  '$id_properti',
+                                  NOW(),
+                                  'pending',
+                                  'cicilan',
+                                  '$dp_percentage'
+                                )";
             $result_transaksi = mysqli_query($koneksi, $query_transaksi);
             
             if(!$result_transaksi) {

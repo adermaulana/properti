@@ -143,7 +143,7 @@ if (!isset($_SESSION['username_admin'])) {
             </li>
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-                <span class="menu-title">Riwayat Pembayaran</span>
+                <span class="menu-title">Laporan</span>
                 <i class="icon-chart menu-icon"></i>
               </a>
               <div class="collapse" id="charts">

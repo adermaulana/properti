@@ -135,7 +135,7 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != 'login') {
             </li>
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-                <span class="menu-title">Riwayat Pembayaran</span>
+                <span class="menu-title">Laporan</span>
                 <i class="icon-chart menu-icon"></i>
               </a>
               <div class="collapse" id="charts">

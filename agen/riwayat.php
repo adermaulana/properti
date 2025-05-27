@@ -220,9 +220,9 @@ session_start();
             <!-- Export Button -->
             <div class="row mb-3">
               <div class="col-md-12 text-right">
-                <a href="export_pemesanan.php?<?= http_build_query($_GET) ?>" class="btn btn-success">
-                  <i class="fa fa-file-excel-o"></i> Export to Excel
-                </a>
+                  <a href="export_pdf.php?<?= http_build_query($_GET) ?>" class="btn btn-danger" target="_blank">
+                    <i class="fa fa-file-pdf-o"></i> Export PDF
+                  </a>
               </div>
             </div>
             

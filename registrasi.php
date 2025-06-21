@@ -8,7 +8,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == 'login') {
     exit();
 }
 
-// Handle form submission
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
     $nama = mysqli_real_escape_string($koneksi, $_POST['nama']);
@@ -17,8 +16,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat']);
     $password = mysqli_real_escape_string($koneksi, $_POST['password']);
     
-    // Hash password
-    $hashed_password = md5($password);
+    // Validate password length
+    $password_error = '';
+    if(strlen($password) < 8) {
+        $password_error = "Password minimal 8 karakter!";
+    }
     
     // Check if username already exists
     $check_query = "SELECT * FROM pengguna_222146 WHERE username_222146 = '$username'";
@@ -26,7 +28,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if(mysqli_num_rows($check_result) > 0) {
         $error = "Username sudah digunakan!";
+    } elseif(!empty($password_error)) {
+        // Don't proceed if password validation fails
+        $error = $password_error;
     } else {
+        // Hash password
+        $hashed_password = md5($password);
+        
         // Insert new user
         $insert_query = "INSERT INTO pengguna_222146 (
             nama_222146,
@@ -72,6 +80,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" type="text/css" href="assets/login/vendor/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="assets/login/css/util.css">
     <link rel="stylesheet" type="text/css" href="assets/login/css/main.css">
+
+
+    <style>
+        .text-danger {
+            color: #dc3545 !important;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+
 </head>
 <body>
     <div class="limiter">
@@ -93,51 +112,56 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 <?php endif; ?>
                 
-                <form class="login100-form validate-form p-b-33 p-t-5" method="POST">
-                    <div class="wrap-input100 validate-input" data-validate="Enter Nama">
-                        <input class="input100" type="text" name="nama" placeholder="Nama" 
-                               value="<?= isset($_POST['nama']) ? htmlspecialchars($_POST['nama']) : '' ?>" required>
-                        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
-                    </div>
+            <form class="login100-form validate-form p-b-33 p-t-5" method="POST">
+                <div class="wrap-input100 validate-input" data-validate="Enter Nama">
+                    <input class="input100" type="text" name="nama" placeholder="Nama" 
+                        value="<?= isset($_POST['nama']) ? htmlspecialchars($_POST['nama']) : '' ?>" required>
+                    <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Enter username">
-                        <input class="input100" type="text" name="username" placeholder="Username" 
-                               value="<?= isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '' ?>" required>
-                        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
-                    </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <input class="input100" type="text" name="username" placeholder="Username" 
+                        value="<?= isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '' ?>" required>
+                    <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Enter Telepon">
-                        <input class="input100" type="number" name="telepon" placeholder="Telepon" 
-                               value="<?= isset($_POST['telepon']) ? htmlspecialchars($_POST['telepon']) : '' ?>" required>
-                        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
-                    </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter Telepon">
+                    <input class="input100" type="number" name="telepon" placeholder="Telepon" 
+                        value="<?= isset($_POST['telepon']) ? htmlspecialchars($_POST['telepon']) : '' ?>" required>
+                    <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Enter Alamat">
-                        <input class="input100" type="text" name="alamat" placeholder="Alamat" 
-                               value="<?= isset($_POST['alamat']) ? htmlspecialchars($_POST['alamat']) : '' ?>" required>
-                        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
-                    </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter Alamat">
+                    <input class="input100" type="text" name="alamat" placeholder="Alamat" 
+                        value="<?= isset($_POST['alamat']) ? htmlspecialchars($_POST['alamat']) : '' ?>" required>
+                    <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Enter password">
-                        <input class="input100" type="password" name="password" placeholder="Password" required>
-                        <span class="focus-input100" data-placeholder="&#xe80f;"></span>
-                    </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter password">
+                    <input class="input100" type="password" name="password" placeholder="Password" required>
+                    <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                    <?php if(isset($password_error) && !empty($password_error)): ?>
+                        <small class="text-danger d-block mt-1" style="color: red; font-size: 12px; margin-left:20px;">
+                            <?= $password_error ?>
+                        </small>
+                    <?php endif; ?>
+                </div>
 
-                    <div class="container-login100-form-btn m-t-32">
-                        <button class="login100-form-btn" type="submit" name="register">
-                            Registrasi
-                        </button>
-                    </div>
+                <div class="container-login100-form-btn m-t-32">
+                    <button class="login100-form-btn" type="submit" name="register">
+                        Registrasi
+                    </button>
+                </div>
 
-                    <div class="text-center mt-3">
-                        <span class="txt2">
-                            Sudah punya akun?
-                        </span>
-                        <a class="txt2" href="login.php">
-                            Login
-                        </a>
-                    </div>
-                </form>
+                <div class="text-center mt-3">
+                    <span class="txt2">
+                        Sudah punya akun?
+                    </span>
+                    <a class="txt2" href="login.php">
+                        Login
+                    </a>
+                </div>
+            </form>
             </div>
         </div>
     </div>

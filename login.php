@@ -9,56 +9,75 @@
         header("location:admin");
     }
 
-    if(isset($_POST['login'])){
+$error_message = '';
+$password_error = '';
 
-        $username = $_POST['username'];
+if(isset($_POST['login'])){
+    // Validate input
+    if(empty($_POST['username']) || empty($_POST['password'])) {
+        $error_message = "Username dan password harus diisi!";
+    } elseif(strlen($_POST['password']) < 8) {
+        $password_error = "Password minimal 8 karakter!";
+        $error_message = "Password minimal 8 karakter!";
+    } else {
+        // Sanitize input
+        $username = mysqli_real_escape_string($koneksi, $_POST['username']);
         $password = md5($_POST['password']);
 
-        $login = mysqli_query($koneksi, "SELECT * FROM admin_222146 WHERE username_admin_222146='$username' and password_admin_222146='$password'");
+        // Check admin login
+        $login = mysqli_query($koneksi, "SELECT * FROM admin_222146 WHERE username_admin_222146='$username' AND password_admin_222146='$password'");
         $cek = mysqli_num_rows($login);
 
-        $loginAgen = mysqli_query($koneksi, "SELECT * FROM agen_222146 WHERE username_222146='$username' and password_222146='$password'");
+        // Check agen login
+        $loginAgen = mysqli_query($koneksi, "SELECT * FROM agen_222146 WHERE username_222146='$username' AND password_222146='$password'");
         $cekAgen = mysqli_num_rows($loginAgen);
 
-		$loginPelanggan = mysqli_query($koneksi, "SELECT * FROM pengguna_222146 WHERE username_222146='$username' and password_222146='$password'");
+        // Check pelanggan login
+        $loginPelanggan = mysqli_query($koneksi, "SELECT * FROM pengguna_222146 WHERE username_222146='$username' AND password_222146='$password'");
         $cekPelanggan = mysqli_num_rows($loginPelanggan);
 
-
         if($cek > 0) {
+            // Admin login
             $admin_data = mysqli_fetch_assoc($login);
             $_SESSION['id_admin'] = $admin_data['id_admin_222146'];
             $_SESSION['nama_admin'] = $admin_data['username_admin_222146'];
             $_SESSION['username_admin'] = $username;
             $_SESSION['status'] = "login";
-            header('location:admin');
+            $_SESSION['role'] = "admin";
+            header('location: admin/');
+            exit();
 
         } else if ($cekPelanggan > 0) {
-            $admin_data = mysqli_fetch_assoc($loginPelanggan);
-            $_SESSION['id_pelanggan'] = $admin_data['id_pengguna_222146'];
-            $_SESSION['nama_pelanggan'] = $admin_data['nama_222146'];
+            // Pelanggan login
+            $pelanggan_data = mysqli_fetch_assoc($loginPelanggan);
+            $_SESSION['id_pelanggan'] = $pelanggan_data['id_pengguna_222146'];
+            $_SESSION['nama_pelanggan'] = $pelanggan_data['nama_222146'];
             $_SESSION['username_pelanggan'] = $username;
-            $_SESSION['alamat_pelanggan'] = $admin_data['alamat'];
-            $_SESSION['telepon_pelanggan'] = $admin_data['telepon'];
+            $_SESSION['alamat_pelanggan'] = $pelanggan_data['alamat_222146'];
+            $_SESSION['telepon_pelanggan'] = $pelanggan_data['no_hp_222146'];
             $_SESSION['status'] = "login";
-            header('location:pelanggan');
+            $_SESSION['role'] = "pelanggan";
+            header('location: pelanggan/');
+            exit();
 
         } else if ($cekAgen > 0) {
-            $admin_data = mysqli_fetch_assoc($loginAgen);
-            $_SESSION['id_agen'] = $admin_data['id_agen_222146'];
-            $_SESSION['nama_agen'] = $admin_data['nama_agen_222146'];
+            // Agen login
+            $agen_data = mysqli_fetch_assoc($loginAgen);
+            $_SESSION['id_agen'] = $agen_data['id_agen_222146'];
+            $_SESSION['nama_agen'] = $agen_data['nama_agen_222146'];
             $_SESSION['username_agen'] = $username;
-            $_SESSION['alamat_agen'] = $admin_data['alamat'];
-            $_SESSION['telepon_agen'] = $admin_data['telepon'];
+            $_SESSION['alamat_agen'] = $agen_data['alamat_222146'];
+            $_SESSION['telepon_agen'] = $agen_data['no_hp_222146'];
             $_SESSION['status'] = "login";
-            header('location:agen');
+            $_SESSION['role'] = "agen";
+            header('location: agen/');
+            exit();
 
         } else {
-            echo "<script>
-            alert('Login Gagal, Periksa Username dan Password Anda!');
-            header('location:login.php');
-                 </script>";
+            $error_message = "Login gagal! Username atau password salah.";
         }
     }
+}
 
 ?>
 
@@ -90,6 +109,26 @@
 	<link rel="stylesheet" type="text/css" href="assets/login/css/util.css">
 	<link rel="stylesheet" type="text/css" href="assets/login/css/main.css">
 <!--===============================================================================================-->
+
+
+<style>
+.alert {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+</style>
+
 </head>
 <body>
 	
@@ -99,16 +138,26 @@
             <span class="login100-form-title p-b-41">
                 Account Login
             </span>
+            <?php if(!empty($error_message)): ?>
+                <div class="alert alert-danger text-center mb-3" style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    <?= htmlspecialchars($error_message) ?>
+                </div>
+            <?php endif; ?>
             <form class="login100-form validate-form p-b-33 p-t-5" method="POST">
-
                 <div class="wrap-input100 validate-input" data-validate="Enter username">
-                    <input class="input100" type="text" name="username" placeholder="User name">
+                    <input class="input100" type="text" name="username" placeholder="User name" 
+                        value="<?= isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '' ?>" required>
                     <span class="focus-input100" data-placeholder="&#xe82a;"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Enter password">
-                    <input class="input100" type="password" name="password" placeholder="Password">
+                    <input class="input100" type="password" name="password" placeholder="Password" required>
                     <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                    <?php if(isset($password_error) && !empty($password_error)): ?>
+                        <small class="text-danger d-block mt-1" style="color: red; font-size: 12px; margin-left:20px;">
+                            <?= $password_error ?>
+                        </small>
+                    <?php endif; ?>
                 </div>
 
                 <div class="container-login100-form-btn m-t-32">
@@ -126,7 +175,6 @@
                         Registrasi
                     </a>
                 </div>
-
             </form>
         </div>
     </div>

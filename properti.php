@@ -18,8 +18,14 @@
       $isLoggedIn = false;
   }
 
-  $query = "SELECT * FROM properti_222146 WHERE status_222146 = 'Tersedia'";
-$result = mysqli_query($koneksi, $query);
+  // Query untuk mendapatkan properti dengan status terjual
+  $query = "SELECT p.*, 
+                   CASE WHEN t.id_properti_222146 IS NOT NULL THEN 'Terjual' ELSE p.status_222146 END as status_properti
+            FROM properti_222146 p 
+            LEFT JOIN transaksi_222146 t ON p.id_properti_222146 = t.id_properti_222146 
+            WHERE p.status_222146 = 'Tersedia'
+            ORDER BY CASE WHEN t.id_properti_222146 IS NOT NULL THEN 1 ELSE 0 END, p.id_properti_222146 DESC";
+  $result = mysqli_query($koneksi, $query);
 
 ?>
 
@@ -68,21 +74,48 @@ $result = mysqli_query($koneksi, $query);
          left: 0;
          width: 100%;
          height: 100%;
-         background-color: rgba(0, 0, 0, 0.5);
+         background-color: rgba(0, 0, 0, 0.7);
          display: flex;
          justify-content: center;
          align-items: center;
+         z-index: 10;
       }
 
       .sold-out-text {
          color: white;
          font-size: 24px;
          font-weight: bold;
-         background-color: rgba(255, 0, 0, 0.7);
-         padding: 10px 20px;
+         background-color: rgba(255, 0, 0, 0.9);
+         padding: 15px 30px;
          transform: rotate(-45deg);
          text-transform: uppercase;
-         letter-spacing: 2px;
+         letter-spacing: 3px;
+         border-radius: 5px;
+         border: 2px solid white;
+         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .property.sold {
+         opacity: 0.8;
+         filter: grayscale(30%);
+      }
+
+      .property.sold .property_img {
+         position: relative;
+      }
+
+      .property.sold .btn-primary {
+         background-color: #6c757d;
+         border-color: #6c757d;
+         cursor: not-allowed;
+         opacity: 0.6;
+      }
+
+      .property.sold .btn-primary:hover {
+         background-color: #6c757d;
+         border-color: #6c757d;
+         transform: none;
+         box-shadow: none;
       }
 
       .titlepage p {
@@ -101,7 +134,7 @@ $result = mysqli_query($koneksi, $query);
    transition: all 0.3s ease;
 }
 
-.property:hover {
+.property:hover:not(.sold) {
    transform: translateY(-10px);
    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
 }
@@ -124,7 +157,7 @@ $result = mysqli_query($koneksi, $query);
    transition: transform 0.5s ease;
 }
 
-.property:hover .property_img img {
+.property:hover:not(.sold) .property_img img {
    transform: scale(1.1);
 }
 
@@ -293,6 +326,12 @@ $result = mysqli_query($koneksi, $query);
    .property_img {
       height: 180px;
    }
+   
+   .sold-out-text {
+      font-size: 18px;
+      padding: 10px 20px;
+      letter-spacing: 2px;
+   }
 }
 
       </style>
@@ -383,32 +422,52 @@ $result = mysqli_query($koneksi, $query);
         <div class="container">
             <div class="row">
                 <?php while($properti = mysqli_fetch_assoc($result)): ?>
-                <div class="col-md-4 col-sm-6">
-                    <div id="prop_hover" class="property">
-                        <div class="property_img position-relative">
-                            <figure>
-                                <img src="admin/uploads/<?= $properti['foto_222146'] ?>" alt="<?= $properti['nama_properti_222146'] ?>"/>
-
-                            </figure>
-                        </div>
-                        <div class="property_details">
-                            <h3><?= $properti['nama_properti_222146'] ?></h3>
-                            <div class="property_specs">
-                                <span><i class="fas fa-ruler-combined"></i> <?= $properti['luas_bangunan_222146'] ?>m² / <?= $properti['luas_tanah_222146'] ?>m²</span>
-                                <span><i class="fas fa-bed"></i> <?= $properti['kamar_tidur_222146'] ?> Kamar</span>
-                                <span><i class="fas fa-bath"></i> <?= $properti['kamar_mandi_222146'] ?> Kamar Mandi</span>
-                            </div>
-                            <p><?= substr($properti['deskripsi_222146'], 0, 100) ?>...</p>
-                            <div class="property_price">
-                                <h4>Rp. <?= number_format($properti['harga_222146'], 0, ',', '.') ?></h4>
-                                <?php if(!empty($properti['promo_text_222146'])): ?>
-                                    <span class="promo"><?= $properti['promo_text_222146'] ?></span>
+                    <?php $isSold = ($properti['status_properti'] == 'Terjual'); ?>
+                    <div class="col-md-4 col-sm-6">
+                        <div id="prop_hover" class="property <?php echo $isSold ? 'sold' : ''; ?>">
+                            <div class="property_img position-relative">
+                                <figure>
+                                    <img src="admin/uploads/<?= $properti['foto_222146'] ?>" alt="<?= $properti['nama_properti_222146'] ?>"/>
+                                </figure>
+                                
+                                <?php if($isSold): ?>
+                                    <div class="sold-out-overlay">
+                                        <div class="sold-out-text">TERJUAL</div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <?php if($isSold): ?>
+                                    <div class="property_tag">
+                                        <span class="tag_sold">Terjual</span>
+                                    </div>
                                 <?php endif; ?>
                             </div>
-                            <a href="detail.php?id=<?= $properti['id_properti_222146'] ?>" class="btn btn-primary mt-3">Lihat Detail</a>
+                            <div class="property_details">
+                                <h3><?= $properti['nama_properti_222146'] ?></h3>
+                                <div class="property_specs">
+                                    <span><i class="fas fa-ruler-combined"></i> <?= $properti['luas_bangunan_222146'] ?>m² / <?= $properti['luas_tanah_222146'] ?>m²</span>
+                                    <span><i class="fas fa-bed"></i> <?= $properti['kamar_tidur_222146'] ?> Kamar</span>
+                                    <span><i class="fas fa-bath"></i> <?= $properti['kamar_mandi_222146'] ?> Kamar Mandi</span>
+                                </div>
+                                <p><?= substr($properti['deskripsi_222146'], 0, 100) ?>...</p>
+                                <div class="property_price">
+                                    <h4>Rp. <?= number_format($properti['harga_222146'], 0, ',', '.') ?></h4>
+                                    <?php if(!empty($properti['promo_text_222146']) && !$isSold): ?>
+                                        <span class="promo"><?= $properti['promo_text_222146'] ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <?php if($isSold): ?>
+                                    <button class="btn btn-primary mt-3" disabled>Properti Telah Terjual</button>
+                                    <div class="sold-out-notice">
+                                        <p><i class="fa fa-info-circle"></i> Properti ini sudah tidak tersedia karena telah terjual</p>
+                                    </div>
+                                <?php else: ?>
+                                    <a href="detail.php?id=<?= $properti['id_properti_222146'] ?>" class="btn btn-primary mt-3">Lihat Detail</a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <?php endwhile; ?>
             </div>
         </div>
